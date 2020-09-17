@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -35,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PickingUpActivity extends BaseActivity {
+public class PickingUpDetailActivity extends BaseActivity {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -116,6 +117,7 @@ public class PickingUpActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
 
                 final String scanResult = intent.getStringExtra("value");
+                Log.d("dsadsadsa",scanResult);
                 //                mTvScanResult.append(scanResult);
 //                mTvScanResult.invalidate();
             }
@@ -173,10 +175,17 @@ public class PickingUpActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, PickedUpActivity.class));
+        finish();
+    }
+
     @OnClick({R.id.iv_back, R.id.tv_pick})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
+                startActivity(new Intent(this, PickedUpActivity.class));
                 finish();
                 break;
             case R.id.tv_pick:

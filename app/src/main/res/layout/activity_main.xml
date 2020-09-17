@@ -209,7 +209,6 @@
                 android:paddingBottom="10dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/grey1"
-                android:textCursorDrawable="@drawable/et_curson"
                 android:textSize="20sp" />
 
         </RelativeLayout>
