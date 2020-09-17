@@ -32,4 +32,9 @@ public class DataRepository implements RemotDataSource {
     public void pdaLogin(ModuleBean moduleBean, getCallback callback) {
         mRemoteDataSource.pdaLogin(moduleBean, callback);
     }
+
+    @Override
+    public void pickUpDetail(String token, ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.pickUpDetail(token, moduleBean, callback);
+    }
 }

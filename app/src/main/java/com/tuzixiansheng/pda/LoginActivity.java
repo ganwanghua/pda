@@ -69,6 +69,11 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
     }
 
     private void initView() {
+        if (SpUtil.getString(this, "isLogin", "").equals("1")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
         dataRepository = Injection.dataRepository(this);
         llShop.setOnTouchListener(this);
     }
@@ -92,6 +97,7 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
                     if (pdaLoginRecord.getData() != null) {
                         shops = pdaLoginRecord.getData().getShops();
                         SpUtil.saveString(LoginActivity.this, "token", pdaLoginRecord.getData().getToken());
+                        SpUtil.saveString(LoginActivity.this, "isLogin", "1");
                         ToastUtils.showToast("登录成功");
 
                         for (PdaLoginRecord.DataBean.ShopsBean shop : shops) {
