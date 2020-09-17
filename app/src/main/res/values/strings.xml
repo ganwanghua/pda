@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">pda</string>
+    <string name="serverhost">https://tuziapp.tuzixs.com</string>
+</resources>
