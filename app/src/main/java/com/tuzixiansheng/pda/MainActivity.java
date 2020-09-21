@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import com.itheima.wheelpicker.WheelPicker;
 import com.pedaily.yc.ycdialoglib.toast.ToastUtils;
+import com.tuzixiansheng.pda.aty.PickedActivity;
 import com.tuzixiansheng.pda.aty.PickedUpActivity;
 import com.tuzixiansheng.pda.aty.PickingUpDetailActivity;
+import com.tuzixiansheng.pda.aty.ReturnGoodsActivity;
 import com.tuzixiansheng.pda.base.BaseActivity;
 import com.tuzixiansheng.pda.base.MyApp;
 import com.tuzixiansheng.pda.bean.ShopBean;
@@ -67,6 +69,8 @@ public class MainActivity extends BaseActivity {
     View view;
     @BindView(R.id.view1)
     View view1;
+    @BindView(R.id.ll_return_goods)
+    LinearLayout llReturnGoods;
     private List<ShopBean> historyList;
     private List<String> mList = new ArrayList<>();
 
@@ -84,7 +88,8 @@ public class MainActivity extends BaseActivity {
         homeAddress.setText(SpUtil.getString(this, "shop", ""));
     }
 
-    @OnClick({R.id.rl_location, R.id.tv_sure, R.id.tv_quit, R.id.ll_mine_contact, R.id.view, R.id.view1, R.id.tv_pick_up,R.id.ll_mine_about})
+    @OnClick({R.id.rl_location, R.id.tv_sure, R.id.tv_quit, R.id.ll_mine_contact, R.id.view, R.id.view1,
+            R.id.tv_pick_up, R.id.ll_mine_about, R.id.ll_mine_help, R.id.ll_return_goods})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_location:
@@ -129,18 +134,24 @@ public class MainActivity extends BaseActivity {
                     boolean matches = editPhone.getText().toString().matches(telRegex);
                     if (matches == false) {
                         ToastUtils.showToast("请输入正确的手机号码");
-                    }else {
+                    } else {
                         llPickUp.setVisibility(View.GONE);
                         Intent intent = new Intent(this, PickingUpDetailActivity.class);
                         intent.putExtra("phone", editPhone.getText().toString());
                         startActivity(intent);
                     }
-                }else {
+                } else {
                     ToastUtils.showToast("请输入手机号");
                 }
                 break;
             case R.id.ll_mine_about:
                 startActivity(new Intent(this, PickedUpActivity.class));
+                break;
+            case R.id.ll_mine_help:
+                startActivity(new Intent(this, PickedActivity.class));
+                break;
+            case R.id.ll_return_goods:
+                startActivity(new Intent(this, ReturnGoodsActivity.class));
                 break;
         }
     }

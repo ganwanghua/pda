@@ -177,7 +177,7 @@ public class PickingUpDetailActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, PickedUpActivity.class));
+//        startActivity(new Intent(this, PickedUpActivity.class));
         finish();
     }
 
@@ -185,7 +185,7 @@ public class PickingUpDetailActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                startActivity(new Intent(this, PickedUpActivity.class));
+//                startActivity(new Intent(this, PickedUpActivity.class));
                 finish();
                 break;
             case R.id.tv_pick:

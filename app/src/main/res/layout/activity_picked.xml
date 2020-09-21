@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".aty.PickedUpActivity">
+    tools:context=".aty.PickedActivity">
 
     <RelativeLayout
         android:id="@+id/rl_title"
@@ -24,20 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="待取货"
+            android:text="已取货"
             android:textColor="@color/black"
             android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_dimension"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="15dp"
-            android:text="商品维度"
-            android:textColor="#44c6a8"
-            android:textSize="16sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -71,7 +60,7 @@
             android:paddingTop="8dp"
             android:paddingRight="20dp"
             android:paddingBottom="8dp"
-            android:text="取货"
+            android:text="查询"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -107,13 +96,13 @@
                 android:id="@+id/tv_today"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="当日待取"
+                android:text="今日"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <View
                 android:id="@+id/view"
-                android:layout_width="60dp"
+                android:layout_width="30dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bg_green" />
@@ -121,7 +110,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_history"
+            android:id="@+id/ll_three_days"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -129,16 +118,16 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_history"
+                android:id="@+id/tv_three_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="历史待取"
+                android:text="3天"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <View
                 android:id="@+id/view1"
-                android:layout_width="60dp"
+                android:layout_width="30dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="5dp"
                 android:visibility="gone"
@@ -147,7 +136,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_picking"
+            android:id="@+id/ll_seven_days"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -155,16 +144,68 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_picking"
+                android:id="@+id/tv_seven_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="取货中"
+                android:text="7天"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <View
                 android:id="@+id/view2"
-                android:layout_width="60dp"
+                android:layout_width="30dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_green" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1个月"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="30dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_green" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_other"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="其他"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="30dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="5dp"
                 android:visibility="gone"

@@ -107,7 +107,7 @@
             android:background="#33000000" />
 
         <LinearLayout
-            android:layout_width="380dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/bg_white"
@@ -171,11 +171,11 @@
             android:background="#33000000" />
 
         <RelativeLayout
-            android:layout_width="380dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/bg_white"
-            android:padding="20dp">
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/tv_pick_up"
@@ -203,9 +203,9 @@
                 android:hint="请输入手机号"
                 android:inputType="numberDecimal"
                 android:maxLength="11"
-                android:paddingLeft="20dp"
+                android:paddingLeft="15dp"
                 android:paddingTop="10dp"
-                android:paddingRight="20dp"
+                android:paddingRight="15dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/grey1"

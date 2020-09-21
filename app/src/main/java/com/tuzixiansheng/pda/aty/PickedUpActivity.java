@@ -9,14 +9,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.OrientationHelper;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.tuzixiansheng.pda.R;
-import com.tuzixiansheng.pda.adapter.ClassifyAdapter;
-import com.tuzixiansheng.pda.adapter.CollectTodayAdapter;
 import com.tuzixiansheng.pda.adapter.FragmentAdapter;
 import com.tuzixiansheng.pda.aty.fragment.CollectTodayFragment;
 import com.tuzixiansheng.pda.base.BaseActivity;
@@ -36,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PickedUpActivity extends BaseActivity implements ClassifyAdapter.MyItemClickListener {
+public class PickedUpActivity extends BaseActivity {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -57,12 +52,28 @@ public class PickedUpActivity extends BaseActivity implements ClassifyAdapter.My
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     List<Fragment> fragments = new ArrayList<>();
-    @BindView(R.id.recycleView)
-    RecyclerView recycleView;
+    @BindView(R.id.tv_today)
+    TextView tvToday;
+    @BindView(R.id.view)
+    View view;
+    @BindView(R.id.ll_today)
+    LinearLayout llToday;
+    @BindView(R.id.tv_history)
+    TextView tvHistory;
+    @BindView(R.id.view1)
+    View view1;
+    @BindView(R.id.ll_history)
+    LinearLayout llHistory;
+    @BindView(R.id.tv_picking)
+    TextView tvPicking;
+    @BindView(R.id.view2)
+    View view2;
+    @BindView(R.id.ll_picking)
+    LinearLayout llPicking;
+    @BindView(R.id.ll_classify)
+    LinearLayout llClassify;
     private DataRepository dataRepository;
-    private List<String> mList = new ArrayList<>();
     private List<TitleBean> titleBeans = new ArrayList<>();
-    private ClassifyAdapter classifyAdapter;
     private String pickType = "1";
 
     @Override
@@ -110,15 +121,6 @@ public class PickedUpActivity extends BaseActivity implements ClassifyAdapter.My
         for (int i = 0; i < dataBeans.size(); i++) {
             titleBeans.add(new TitleBean(dataBeans.get(i).getPhone(), dataBeans.get(i).getNickName(), dataBeans.get(i).getPickNum()));
         }
-        mList.clear();
-        mList.add("当日待取（" + dataBeans.size() + ")");
-        mList.add("历史待取（" + dataBeans.size() + ")");
-        mList.add("取货中（" + dataBeans.size() + ")");
-        recycleView.setLayoutManager(new LinearLayoutManager(PickedUpActivity.this));
-        classifyAdapter = new ClassifyAdapter(PickedUpActivity.this, mList);
-        recycleView.setAdapter(classifyAdapter);
-        classifyAdapter.setItemClickListener(this);
-
         for (int i = 0; i < titleBeans.size(); i++) {
             fragments.add(new CollectTodayFragment(titleBeans.get(i).getPhone(), titleBeans.get(i).getNickName(), titleBeans.get(i).getPickNum()));
         }
@@ -132,7 +134,19 @@ public class PickedUpActivity extends BaseActivity implements ClassifyAdapter.My
 
             @Override
             public void onPageSelected(int position) {
-                classifyAdapter.singleChoose(position);
+                if (position == 0) {
+                    view.setVisibility(View.VISIBLE);
+                    view1.setVisibility(View.GONE);
+                    view2.setVisibility(View.GONE);
+                } else if (position == 1) {
+                    view.setVisibility(View.GONE);
+                    view1.setVisibility(View.VISIBLE);
+                    view2.setVisibility(View.GONE);
+                } else {
+                    view.setVisibility(View.GONE);
+                    view1.setVisibility(View.GONE);
+                    view2.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -142,15 +156,36 @@ public class PickedUpActivity extends BaseActivity implements ClassifyAdapter.My
         });
     }
 
-    @OnClick(R.id.iv_back)
-    public void onViewClicked() {
-        finish();
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        pickType = String.valueOf((position+1));
-        classifyAdapter.singleChoose(position);
-        viewPager.setCurrentItem(position);
+    @OnClick({R.id.iv_back, R.id.ll_today, R.id.ll_history, R.id.ll_picking})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.ll_today:
+                view.setVisibility(View.VISIBLE);
+                view1.setVisibility(View.GONE);
+                view2.setVisibility(View.GONE);
+                pickType = "1";
+                viewPager.setCurrentItem(0);
+                pickUpList(pickType);
+                break;
+            case R.id.ll_history:
+                view.setVisibility(View.GONE);
+                view1.setVisibility(View.VISIBLE);
+                view2.setVisibility(View.GONE);
+                pickType = "2";
+                viewPager.setCurrentItem(1);
+                pickUpList(pickType);
+                break;
+            case R.id.ll_picking:
+                view.setVisibility(View.GONE);
+                view1.setVisibility(View.GONE);
+                view2.setVisibility(View.VISIBLE);
+                pickType = "3";
+                viewPager.setCurrentItem(2);
+                pickUpList(pickType);
+                break;
+        }
     }
 }

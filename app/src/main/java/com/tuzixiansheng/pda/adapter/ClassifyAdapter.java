@@ -28,6 +28,11 @@ public class ClassifyAdapter extends RecyclerView.Adapter<ClassifyAdapter.MyView
         notifyDataSetChanged();
     }
 
+    public void setData(List<String> List) {
+        mList = List;
+        notifyDataSetChanged();
+    }
+
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
     }
