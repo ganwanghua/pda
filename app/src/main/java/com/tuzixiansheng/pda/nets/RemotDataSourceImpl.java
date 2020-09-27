@@ -32,8 +32,8 @@ public class RemotDataSourceImpl implements RemotDataSource {
     }
 
     @Override
-    public void pdaLogin(ModuleBean moduleBean, final getCallback callback) {
-        Observable<PdaLoginRecord> observable = RetrofitHelper.getInstance(mContext).getServer().pdaLogin(moduleBean);
+    public void pdaLogin(String terminal, ModuleBean moduleBean, final getCallback callback) {
+        Observable<PdaLoginRecord> observable = RetrofitHelper.getInstance(mContext).getServer().pdaLogin(terminal, moduleBean);
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PdaLoginRecord>() {
                     @Override

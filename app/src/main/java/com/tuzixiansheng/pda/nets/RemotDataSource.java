@@ -14,7 +14,7 @@ public interface RemotDataSource {
         void onSuccess(Object data);
     }
 
-    void pdaLogin(ModuleBean moduleBean, getCallback callback);
+    void pdaLogin(String terminal, ModuleBean moduleBean, getCallback callback);
 
     void pickUpDetail(String token, ModuleBean moduleBean, getCallback callback);
 

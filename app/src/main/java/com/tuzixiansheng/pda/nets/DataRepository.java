@@ -29,8 +29,8 @@ public class DataRepository implements RemotDataSource {
     }
 
     @Override
-    public void pdaLogin(ModuleBean moduleBean, getCallback callback) {
-        mRemoteDataSource.pdaLogin(moduleBean, callback);
+    public void pdaLogin(String terminal, ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.pdaLogin(terminal, moduleBean, callback);
     }
 
     @Override

@@ -17,11 +17,11 @@ import rx.Observable;
 
 public interface RetrofitService {
     // PDA登录
-    @POST("admin/app/home/pdaLogin")
-    Observable<PdaLoginRecord> pdaLogin(@Body ModuleBean moduleBean);
+    @POST("/auth/login")
+    Observable<PdaLoginRecord> pdaLogin(@Header("terminal") String terminal, @Body ModuleBean moduleBean);
 
     // 个人待取货详情列表
-    @POST("admin/app/pda/pickUpDetail")
+    @POST("/pda/pdaInfo/pickUpDetail")
     Observable<PickUpDetailRecord> pickUpDetail(@Header("Authorization") String token, @Body ModuleBean moduleBean);
 
     // 待取列表

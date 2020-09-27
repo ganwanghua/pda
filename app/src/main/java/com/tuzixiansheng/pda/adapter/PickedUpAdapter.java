@@ -21,12 +21,12 @@ import java.util.List;
  * @date: 2017/7/19
  */
 
-public class WaitTodayAdapter extends RecyclerView.Adapter<WaitTodayAdapter.WaitTodayViewHolder> {
+public class PickedUpAdapter extends RecyclerView.Adapter<PickedUpAdapter.WaitTodayViewHolder> {
     private LayoutInflater mInflater;
     private List<PickUpDetailRecord.DataBean> mShowItems;
     private Context context;
 
-    public WaitTodayAdapter(Context context) {
+    public PickedUpAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
     }

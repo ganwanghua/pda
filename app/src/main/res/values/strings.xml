@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">pda</string>
-    <string name="serverhost">https://tuziapp.tuzixs.com</string>
+<!--    <string name="serverhost">https://tuziapp.tuzixs.com</string>-->
+    <string name="serverhost">http://192.168.0.149:8080</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

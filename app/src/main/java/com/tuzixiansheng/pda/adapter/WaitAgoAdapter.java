@@ -44,12 +44,13 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
 //        holder.tvName.setText(mShowItems.get(position));
         holder.tv_item_nickname.setText(mShowItems.get(position).getSkuCode());
         holder.tv_item_phone.setText(mShowItems.get(position).getSkuName());
-        holder.tv_item_num.setText(mShowItems.get(position).getSkuNum());
+        holder.tv_item_num.setText(mShowItems.get(position).getSkuNum()+"件");
+        holder.tv_specifications.setText(mShowItems.get(position).getSkuStandard());
         holder.ll_wait_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(position);
+                    mOnItemClickListener.onItemClicks(position);
                 }
             }
         });
@@ -69,7 +70,7 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
 
     //**********************itemClick************************
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClicks(int position);
     }
 
     private OnItemClickListener mOnItemClickListener;
@@ -84,6 +85,7 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
         private final TextView tv_item_nickname;
         private final TextView tv_item_phone;
         private final TextView tv_item_num;
+        private final TextView tv_specifications;
 
         public WaitAgoViewHolder(View itemView) {
             super(itemView);
@@ -91,6 +93,7 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
             tv_item_nickname = itemView.findViewById(R.id.tv_item_nickname);
             tv_item_phone = itemView.findViewById(R.id.tv_item_phone);
             tv_item_num = itemView.findViewById(R.id.tv_item_num);
+            tv_specifications = itemView.findViewById(R.id.tv_specifications);
         }
     }
 

@@ -1,7 +1,11 @@
 package com.tuzixiansheng.pda;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -73,7 +77,8 @@ public class MainActivity extends BaseActivity {
     LinearLayout llReturnGoods;
     private List<ShopBean> historyList;
     private List<String> mList = new ArrayList<>();
-
+    private BroadcastReceiver mReceiver;
+    private IntentFilter mFilter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initWhite();
@@ -84,8 +89,39 @@ public class MainActivity extends BaseActivity {
         initView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        this.unregisterReceiver(mReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mReceiver = null;
+        mFilter = null;
+        MyApp.Controll.close();
+        super.onDestroy();
+    }
+
     private void initView() {
         homeAddress.setText(SpUtil.getString(this, "shop", ""));
+        mFilter = new IntentFilter("android.intent.action.SCANRESULT");
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                final String scanResult = intent.getStringExtra("value");
+                Log.d("dsadsadsa",scanResult);
+                //                mTvScanResult.append(scanResult);
+//                mTvScanResult.invalidate();
+            }
+        };
     }
 
     @OnClick({R.id.rl_location, R.id.tv_sure, R.id.tv_quit, R.id.ll_mine_contact, R.id.view, R.id.view1,

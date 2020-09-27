@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,6 +59,7 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
     private DataRepository dataRepository;
     private List<PdaLoginRecord.DataBean.ShopsBean> shops;
     private List<String> mList = new ArrayList<>();
+    private boolean isClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +76,29 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
             startActivity(intent);
             finish();
         }
+        etLoginPhone.setText(SpUtil.getString(this,"username",""));
+        etPassword.setText(SpUtil.getString(this,"password",""));
+        if(SpUtil.getString(LoginActivity.this, "isChecked", "").equals("1")){
+            cbLogin.setChecked(true);
+            isClick = true;
+        }else {
+            cbLogin.setChecked(false);
+            isClick = false;
+        }
         dataRepository = Injection.dataRepository(this);
         llShop.setOnTouchListener(this);
+        cbLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    isClick = true;
+                    SpUtil.saveString(LoginActivity.this, "isChecked", "1");
+                }else {
+                    isClick = false;
+                    SpUtil.saveString(LoginActivity.this, "isChecked", "0");
+                }
+            }
+        });
     }
 
     private void loginNet(String phone, String pwd) {
@@ -83,7 +106,7 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
         ModuleBean moduleBean = new ModuleBean();
         moduleBean.username = phone;
         moduleBean.password = pwd;
-        dataRepository.pdaLogin(moduleBean, new RemotDataSource.getCallback() {
+        dataRepository.pdaLogin("3", moduleBean, new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
                 ViewLoading.dismiss(LoginActivity.this);
@@ -95,6 +118,12 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
                 PdaLoginRecord pdaLoginRecord = (PdaLoginRecord) data;
                 if (pdaLoginRecord.getCode() == 200) {
                     if (pdaLoginRecord.getData() != null) {
+                        SpUtil.saveString(LoginActivity.this, "username", phone);
+                        if(isClick){
+                            SpUtil.saveString(LoginActivity.this, "password", pwd);
+                        }else {
+                            SpUtil.saveString(LoginActivity.this, "password", "");
+                        }
                         shops = pdaLoginRecord.getData().getShops();
                         SpUtil.saveString(LoginActivity.this, "token", pdaLoginRecord.getData().getToken());
                         SpUtil.saveString(LoginActivity.this, "isLogin", "1");
@@ -131,8 +160,8 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
                 String phone = etLoginPhone.getText().toString();
                 String pwd = etPassword.getText().toString();
 //                phone = "15155119947";
-                phone = "13636616254";
-                pwd = "123456";
+//                phone = "13636616254";
+//                pwd = "123456";
                 String telRegex = "[1][3456789]\\d{9}";
                 boolean matches = phone.matches(telRegex);
                 if (TextUtils.isEmpty(phone)) {

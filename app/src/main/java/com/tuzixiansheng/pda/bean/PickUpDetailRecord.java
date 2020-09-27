@@ -4,7 +4,6 @@ import java.util.List;
 
 public class PickUpDetailRecord {
 
-
     /**
      * msg : 操作成功
      * code : 200
@@ -57,6 +56,23 @@ public class PickUpDetailRecord {
         private String skuNum;
         private boolean isNow;
         private String prePickTime;
+        private String skuStandard;
+
+        public boolean isNow() {
+            return isNow;
+        }
+
+        public void setNow(boolean now) {
+            isNow = now;
+        }
+
+        public String getSkuStandard() {
+            return skuStandard;
+        }
+
+        public void setSkuStandard(String skuStandard) {
+            this.skuStandard = skuStandard;
+        }
 
         public String getOrderSkuId() {
             return orderSkuId;
