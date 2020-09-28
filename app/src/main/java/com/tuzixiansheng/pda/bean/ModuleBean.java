@@ -6,4 +6,8 @@ public class ModuleBean {
     public String shopId;
     public String pickType;
     public String phone;
+    public String skuCode;
+    public String dayType;
+    public String beginTime;
+    public String endTime;
 }

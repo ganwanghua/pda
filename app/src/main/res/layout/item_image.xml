@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_image"
+    android:layout_width="90dp"
+    android:layout_height="90dp">
+
+    <com.tuzixiansheng.pda.weight.CustomRoundAngleImageView
+        android:id="@+id/pic_iv"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true" />
+
+    <ImageView
+        android:id="@+id/pic_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@mipmap/iv_close"
+        android:visibility="gone" />
+</RelativeLayout>

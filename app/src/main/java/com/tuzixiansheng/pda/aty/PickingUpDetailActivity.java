@@ -9,7 +9,9 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,12 +20,14 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lling.photopicker.PhotoPickerActivity;
 import com.pedaily.yc.ycdialoglib.toast.ToastUtils;
 import com.timmy.tdialog.TDialog;
 import com.timmy.tdialog.base.BindViewHolder;
 import com.timmy.tdialog.listener.OnBindViewListener;
 import com.timmy.tdialog.listener.OnViewClickListener;
 import com.tuzixiansheng.pda.R;
+import com.tuzixiansheng.pda.adapter.ImageAdapter;
 import com.tuzixiansheng.pda.adapter.OriginalDeliveryAdapter;
 import com.tuzixiansheng.pda.adapter.PickedUpAdapter;
 import com.tuzixiansheng.pda.adapter.WaitAgoAdapter;
@@ -90,6 +94,10 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
     private int pos;
     private TDialog tDialog, tDialog1, tDialog2, tDialog3, tDialog4;
     private String pos1;
+    private LinearLayout ll_sure;
+    private ImageAdapter imageAdapter;
+    private ArrayList<String> mPicList = new ArrayList<>();
+    private RecyclerView recycler_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +127,57 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
         mFilter = null;
 //        MyApp.Controll.close();
         super.onDestroy();
+    }
+
+    private void initGridView() {
+        imageAdapter = new ImageAdapter(this, mPicList);
+        recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recycler_view.setAdapter(imageAdapter);
+        imageAdapter.setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick1(int position) {
+                if (position == mPicList.size()) {
+                    //如果“增加按钮形状的”图片的位置是最后一张，且添加了的图片的数量不超过5张，才能点击
+                    if (mPicList.size() == 5) {
+                        viewPluImg(position);
+                    } else {
+                        //添加凭证图片
+                        selectPic();
+                    }
+                }else {
+                    viewPluImg(position);
+                }
+            }
+        });
+    }
+
+    private void viewPluImg(int index) {
+        Intent imgIntent = new Intent(this, TaskBigImgActivity.class);
+        imgIntent.putStringArrayListExtra("paths", mPicList);
+        imgIntent.putExtra("position", index);
+        startActivity(imgIntent);
+    }
+
+    private void selectPic() {
+        Intent intent = new Intent(this, PhotoPickerActivity.class);
+        intent.putExtra(PhotoPickerActivity.EXTRA_SHOW_CAMERA, true); // 是否显示相机
+        intent.putExtra(PhotoPickerActivity.EXTRA_SELECT_MODE, PhotoPickerActivity.MODE_MULTI); // 选择模式（默认多选模式）
+        intent.putExtra(PhotoPickerActivity.EXTRA_MAX_MUN, 5 - mPicList.size()); // 最大照片张数
+        startActivityForResult(intent, 1000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 1000:
+                    // 图片选择成功
+                    mPicList.addAll(data.getStringArrayListExtra(PhotoPickerActivity.KEY_RESULT));
+                    initGridView();
+                    break;
+            }
+        }
     }
 
     private void initView() {
@@ -265,7 +324,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                 .setScreenWidthAspect(this, 0.8f)
                 .setGravity(Gravity.CENTER)
                 .addOnClickListener(R.id.tv_out_of_stock, R.id.tv_original_delivery, R.id.tv_poor_quality,
-                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure)
+                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure, R.id.ll_sure)
                 .setOnBindViewListener(new OnBindViewListener() {
                     @Override
                     public void bindView(BindViewHolder viewHolder) {
@@ -275,6 +334,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         tv_replacement = viewHolder.itemView.findViewById(R.id.tv_replacement);
                         tv_cancel = viewHolder.itemView.findViewById(R.id.tv_cancel);
                         tv_sure = viewHolder.itemView.findViewById(R.id.tv_sure);
+                        ll_sure = viewHolder.itemView.findViewById(R.id.ll_sure);
                     }
                 })
                 .setOnViewClickListener(new OnViewClickListener() {
@@ -287,6 +347,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_original_delivery:
                                 pos = 2;
@@ -294,6 +355,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_green);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_poor_quality:
                                 pos = 3;
@@ -301,6 +363,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_green);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_replacement:
                                 pos = 4;
@@ -308,6 +371,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_green);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_cancel:
                                 tDialog1.dismiss();
@@ -354,11 +418,12 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                             .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                             .setGravity(Gravity.CENTER)
                                             .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure)
+                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
                                             .setOnBindViewListener(new OnBindViewListener() {
                                                 @Override
                                                 public void bindView(BindViewHolder viewHolder) {
-
+                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                    initGridView();
                                                 }
                                             })
                                             .setOnViewClickListener(new OnViewClickListener() {
@@ -367,9 +432,11 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                     switch (view.getId()) {
                                                         case R.id.tv_cancel:
                                                             tDialog4.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                         case R.id.tv_sure:
                                                             tDialog4.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                     }
                                                 }
@@ -383,11 +450,12 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                             .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                             .setGravity(Gravity.CENTER)
                                             .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure)
+                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
                                             .setOnBindViewListener(new OnBindViewListener() {
                                                 @Override
                                                 public void bindView(BindViewHolder viewHolder) {
-
+                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                    initGridView();
                                                 }
                                             })
                                             .setOnViewClickListener(new OnViewClickListener() {
@@ -396,9 +464,11 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                     switch (view.getId()) {
                                                         case R.id.tv_cancel:
                                                             tDialog3.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                         case R.id.tv_sure:
                                                             tDialog3.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                     }
                                                 }
@@ -421,7 +491,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                 .setScreenWidthAspect(this, 0.8f)
                 .setGravity(Gravity.CENTER)
                 .addOnClickListener(R.id.tv_out_of_stock, R.id.tv_original_delivery, R.id.tv_poor_quality,
-                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure)
+                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure, R.id.ll_sure)
                 .setOnBindViewListener(new OnBindViewListener() {
                     @Override
                     public void bindView(BindViewHolder viewHolder) {
@@ -431,6 +501,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         tv_replacement = viewHolder.itemView.findViewById(R.id.tv_replacement);
                         tv_cancel = viewHolder.itemView.findViewById(R.id.tv_cancel);
                         tv_sure = viewHolder.itemView.findViewById(R.id.tv_sure);
+                        ll_sure = viewHolder.itemView.findViewById(R.id.ll_sure);
                     }
                 })
                 .setOnViewClickListener(new OnViewClickListener() {
@@ -443,6 +514,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_original_delivery:
                                 pos = 2;
@@ -450,6 +522,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_green);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_poor_quality:
                                 pos = 3;
@@ -457,6 +530,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_green);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_replacement:
                                 pos = 4;
@@ -464,6 +538,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_green);
+                                ll_sure.setVisibility(View.VISIBLE);
                                 break;
                             case R.id.tv_cancel:
                                 tDialog1.dismiss();
@@ -510,11 +585,12 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                             .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                             .setGravity(Gravity.CENTER)
                                             .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure)
+                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
                                             .setOnBindViewListener(new OnBindViewListener() {
                                                 @Override
                                                 public void bindView(BindViewHolder viewHolder) {
-
+                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                    initGridView();
                                                 }
                                             })
                                             .setOnViewClickListener(new OnViewClickListener() {
@@ -523,9 +599,11 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                     switch (view.getId()) {
                                                         case R.id.tv_cancel:
                                                             tDialog4.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                         case R.id.tv_sure:
                                                             tDialog4.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                     }
                                                 }
@@ -539,11 +617,12 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                             .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                             .setGravity(Gravity.CENTER)
                                             .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure)
+                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
                                             .setOnBindViewListener(new OnBindViewListener() {
                                                 @Override
                                                 public void bindView(BindViewHolder viewHolder) {
-
+                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                    initGridView();
                                                 }
                                             })
                                             .setOnViewClickListener(new OnViewClickListener() {
@@ -552,9 +631,11 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                     switch (view.getId()) {
                                                         case R.id.tv_cancel:
                                                             tDialog3.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                         case R.id.tv_sure:
                                                             tDialog3.dismiss();
+                                                            mPicList.clear();
                                                             break;
                                                     }
                                                 }

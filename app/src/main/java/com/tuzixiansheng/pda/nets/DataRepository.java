@@ -47,4 +47,14 @@ public class DataRepository implements RemotDataSource {
     public void pickUpListForGoods(String token, ModuleBean moduleBean, getCallback callback) {
         mRemoteDataSource.pickUpListForGoods(token, moduleBean, callback);
     }
+
+    @Override
+    public void alreadyPickUpGoods(String token, ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.alreadyPickUpGoods(token, moduleBean, callback);
+    }
+
+    @Override
+    public void pickedDetail(String token, ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.pickedDetail(token, moduleBean, callback);
+    }
 }

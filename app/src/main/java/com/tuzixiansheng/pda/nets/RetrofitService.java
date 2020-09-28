@@ -5,6 +5,7 @@ import com.tuzixiansheng.pda.bean.PdaLoginRecord;
 import com.tuzixiansheng.pda.bean.PickUpDetailRecord;
 import com.tuzixiansheng.pda.bean.PickUpListForGoods;
 import com.tuzixiansheng.pda.bean.PickUpRecord;
+import com.tuzixiansheng.pda.bean.PickedDetail;
 
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -32,4 +33,12 @@ public interface RetrofitService {
     // 待取列表-商品维度
     @POST("/pda/pdaInfo/pickUpListForGoods")
     Observable<PickUpListForGoods> pickUpListForGoods(@Header("Authorization") String token, @Body ModuleBean moduleBean);
+
+    // 已取列表
+    @POST("/pda/pdaInfo/alreadyPickUpGoods")
+    Observable<PickUpRecord> alreadyPickUpGoods(@Header("Authorization") String token, @Body ModuleBean moduleBean);
+
+    // 已取列表
+    @POST("/pda/pdaInfo/pickedDetail")
+    Observable<PickedDetail> pickedDetail(@Header("Authorization") String token, @Body ModuleBean moduleBean);
 }

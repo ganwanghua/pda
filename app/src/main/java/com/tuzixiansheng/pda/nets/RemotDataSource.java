@@ -21,4 +21,8 @@ public interface RemotDataSource {
     void pickUpList(String token, ModuleBean moduleBean, getCallback callback);
 
     void pickUpListForGoods(String token, ModuleBean moduleBean, getCallback callback);
+
+    void alreadyPickUpGoods(String token, ModuleBean moduleBean, getCallback callback);
+
+    void pickedDetail(String token, ModuleBean moduleBean, getCallback callback);
 }

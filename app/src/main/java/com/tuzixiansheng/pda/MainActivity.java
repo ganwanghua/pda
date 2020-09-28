@@ -1,5 +1,6 @@
 package com.tuzixiansheng.pda;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.itheima.wheelpicker.WheelPicker;
 import com.pedaily.yc.ycdialoglib.toast.ToastUtils;
+import com.tbruyelle.rxpermissions3.RxPermissions;
 import com.tuzixiansheng.pda.aty.PickedActivity;
 import com.tuzixiansheng.pda.aty.PickedUpActivity;
 import com.tuzixiansheng.pda.aty.PickingUpDetailActivity;
@@ -79,6 +81,7 @@ public class MainActivity extends BaseActivity {
     private List<String> mList = new ArrayList<>();
     private BroadcastReceiver mReceiver;
     private IntentFilter mFilter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initWhite();
@@ -110,6 +113,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView() {
+        rxPermissionTest();
         homeAddress.setText(SpUtil.getString(this, "shop", ""));
         mFilter = new IntentFilter("android.intent.action.SCANRESULT");
         mReceiver = new BroadcastReceiver() {
@@ -117,11 +121,24 @@ public class MainActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
 
                 final String scanResult = intent.getStringExtra("value");
-                Log.d("dsadsadsa",scanResult);
+                Log.d("dsadsadsa", scanResult);
                 //                mTvScanResult.append(scanResult);
 //                mTvScanResult.invalidate();
             }
         };
+    }
+
+    private void rxPermissionTest() {
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if (granted) {
+                        // I can control the camera now
+                    } else {
+                        // Oups permission denied
+                    }
+                });
     }
 
     @OnClick({R.id.rl_location, R.id.tv_sure, R.id.tv_quit, R.id.ll_mine_contact, R.id.view, R.id.view1,

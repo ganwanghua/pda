@@ -24,7 +24,7 @@ public class CommodityAdapter extends RecyclerView.Adapter<CommodityAdapter.MyVi
     private MyItemClickListener mItemClickListener;
 
     public void setData(List<PickUpListForGoods.DataBean> data) {
-        mList.addAll(data);
+        mList = data;
         notifyDataSetChanged();
     }
 

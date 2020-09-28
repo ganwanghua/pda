@@ -8,6 +8,7 @@ import com.tuzixiansheng.pda.bean.PdaLoginRecord;
 import com.tuzixiansheng.pda.bean.PickUpDetailRecord;
 import com.tuzixiansheng.pda.bean.PickUpListForGoods;
 import com.tuzixiansheng.pda.bean.PickUpRecord;
+import com.tuzixiansheng.pda.bean.PickedDetail;
 
 import rx.Observable;
 import rx.Observer;
@@ -115,6 +116,50 @@ public class RemotDataSourceImpl implements RemotDataSource {
 
                     @Override
                     public void onNext(PickUpListForGoods s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void alreadyPickUpGoods(String token, ModuleBean moduleBean, final getCallback callback) {
+        Observable<PickUpRecord> observable = RetrofitHelper.getInstance(mContext).getServer().alreadyPickUpGoods(token, moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PickUpRecord>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PickUpRecord s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void pickedDetail(String token, ModuleBean moduleBean, final getCallback callback) {
+        Observable<PickedDetail> observable = RetrofitHelper.getInstance(mContext).getServer().pickedDetail(token, moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PickedDetail>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PickedDetail s) { // 请求成功
                         callback.onSuccess(s);
                     }
                 });

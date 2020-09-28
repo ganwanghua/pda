@@ -160,8 +160,8 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
                 String phone = etLoginPhone.getText().toString();
                 String pwd = etPassword.getText().toString();
 //                phone = "15155119947";
-//                phone = "13636616254";
-//                pwd = "123456";
+                phone = "18356025739";
+                pwd = "123456";
                 String telRegex = "[1][3456789]\\d{9}";
                 boolean matches = phone.matches(telRegex);
                 if (TextUtils.isEmpty(phone)) {

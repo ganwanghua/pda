@@ -60,8 +60,8 @@
             android:layout_weight="1"
             android:background="@drawable/bg_white_5"
             android:gravity="center"
-            android:text="质量不佳拒收"
             android:padding="10dp"
+            android:text="质量不佳拒收"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -72,18 +72,20 @@
             android:layout_weight="1"
             android:background="@drawable/bg_white_5"
             android:gravity="center"
-            android:text="换货不退款"
             android:padding="10dp"
+            android:text="换货不退款"
             android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_sure"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingBottom="20dp">
+        android:paddingBottom="20dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_cancel"

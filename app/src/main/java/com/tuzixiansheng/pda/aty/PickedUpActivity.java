@@ -19,8 +19,10 @@ import com.tuzixiansheng.pda.aty.fragment.CollectTodayFragment;
 import com.tuzixiansheng.pda.aty.fragment.CommodityFragment;
 import com.tuzixiansheng.pda.base.BaseActivity;
 import com.tuzixiansheng.pda.bean.NumBean;
+import com.tuzixiansheng.pda.utils.SpUtil;
 import com.tuzixiansheng.pda.utils.StatusBarUtil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -123,12 +125,13 @@ public class PickedUpActivity extends BaseActivity {
             tvPicking.setText("取货中(" + numBean.getNum() + ")");
         } else if (numBean.getType().equals("4")) {
             tvTodayOne.setText("当日待取(" + numBean.getNum() + ")");
-        }else if (numBean.getType().equals("5")) {
+        } else if (numBean.getType().equals("5")) {
             tvHistoryOne.setText("昨日待取(" + numBean.getNum() + ")");
         }
     }
 
     private void initView() {
+        SpUtil.saveString(PickedUpActivity.this, "type", "1");
         for (int i = 0; i < 3; i++) {
             fragments.add(new CollectTodayFragment(i + 1 + ""));
         }
@@ -177,9 +180,11 @@ public class PickedUpActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
+                    SpUtil.saveString(PickedUpActivity.this, "type", "1");
                     view3.setVisibility(View.VISIBLE);
                     view4.setVisibility(View.GONE);
                 } else if (position == 1) {
+                    SpUtil.saveString(PickedUpActivity.this, "type", "2");
                     view3.setVisibility(View.GONE);
                     view4.setVisibility(View.VISIBLE);
                 }
@@ -254,7 +259,7 @@ public class PickedUpActivity extends BaseActivity {
                 break;
             case R.id.tv_query:
                 if (editSku.getText().toString().length() > 0) {
-
+                    EventBus.getDefault().post(editSku.getText().toString());
                 } else {
                     ToastUtils.showToast("请输入SKU编码");
                 }
@@ -262,11 +267,13 @@ public class PickedUpActivity extends BaseActivity {
             case R.id.ll_today_one:
                 view3.setVisibility(View.VISIBLE);
                 view4.setVisibility(View.GONE);
+                SpUtil.saveString(this, "type", "1");
                 viewPager1.setCurrentItem(0);
                 break;
             case R.id.ll_history_one:
                 view3.setVisibility(View.GONE);
                 view4.setVisibility(View.VISIBLE);
+                SpUtil.saveString(this, "type", "2");
                 viewPager1.setCurrentItem(1);
                 break;
         }

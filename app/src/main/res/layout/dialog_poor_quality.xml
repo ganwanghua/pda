@@ -28,19 +28,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="拍照"
+            android:layout_marginTop="10dp"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="10dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:overScrollMode="never" />
     </LinearLayout>
 
     <RelativeLayout
@@ -61,10 +65,9 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginLeft="10dp"
-            android:gravity="start"
             android:layout_toRightOf="@id/reason"
             android:background="@drawable/bg_white_5"
-            android:inputType="number"
+            android:gravity="start"
             android:padding="10dp" />
     </RelativeLayout>
 
