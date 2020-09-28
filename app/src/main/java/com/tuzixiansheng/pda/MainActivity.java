@@ -174,6 +174,7 @@ public class MainActivity extends BaseActivity {
                         llPickUp.setVisibility(View.GONE);
                         Intent intent = new Intent(this, PickingUpDetailActivity.class);
                         intent.putExtra("phone", editPhone.getText().toString());
+                        intent.putExtra("pos", "2");
                         startActivity(intent);
                     }
                 } else {

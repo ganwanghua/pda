@@ -6,6 +6,7 @@ import android.content.Context;
 import com.tuzixiansheng.pda.bean.ModuleBean;
 import com.tuzixiansheng.pda.bean.PdaLoginRecord;
 import com.tuzixiansheng.pda.bean.PickUpDetailRecord;
+import com.tuzixiansheng.pda.bean.PickUpListForGoods;
 import com.tuzixiansheng.pda.bean.PickUpRecord;
 
 import rx.Observable;
@@ -92,6 +93,28 @@ public class RemotDataSourceImpl implements RemotDataSource {
 
                     @Override
                     public void onNext(PickUpRecord s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void pickUpListForGoods(String token, ModuleBean moduleBean, final getCallback callback) {
+        Observable<PickUpListForGoods> observable = RetrofitHelper.getInstance(mContext).getServer().pickUpListForGoods(token, moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PickUpListForGoods>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PickUpListForGoods s) { // 请求成功
                         callback.onSuccess(s);
                     }
                 });

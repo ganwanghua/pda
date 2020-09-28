@@ -40,143 +40,279 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_title"
-        android:padding="10dp">
-
-        <EditText
-            android:id="@+id/edit_phone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_white"
-            android:hint="输入手机号"
-            android:inputType="numberDecimal"
-            android:maxLength="11"
-            android:padding="8dp"
-            android:textColorHint="@color/grey1"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/bg_green"
-            android:paddingLeft="20dp"
-            android:paddingTop="8dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="8dp"
-            android:text="取货"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_clear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_white"
-            android:paddingLeft="20dp"
-            android:paddingTop="8dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="8dp"
-            android:text="清空"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_classify"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ll_phone">
-
-        <LinearLayout
-            android:id="@+id/ll_today"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_today"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="当日待取"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="60dp"
-                android:layout_height="4dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bg_green" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_history"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_history"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="历史待取"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <View
-                android:id="@+id/view1"
-                android:layout_width="60dp"
-                android:layout_height="4dp"
-                android:layout_marginTop="5dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_green" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_picking"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_picking"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="取货中"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="60dp"
-                android:layout_height="4dp"
-                android:layout_marginTop="5dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_green" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+    <RelativeLayout
+        android:id="@+id/rl_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ll_classify"
-        android:overScrollMode="never" />
+        android:layout_below="@id/rl_title">
+
+        <LinearLayout
+            android:id="@+id/ll_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/edit_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_white"
+                android:hint="输入手机号"
+                android:inputType="numberDecimal"
+                android:maxLength="11"
+                android:padding="8dp"
+                android:textColorHint="@color/grey1"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_pick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_green"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="取货"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="清空"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_classify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_phone">
+
+            <LinearLayout
+                android:id="@+id/ll_today"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="当日待取"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_green" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_history"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="昨日待取"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_green"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_picking"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_picking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="取货中"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_green"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_classify"
+            android:layout_marginTop="10dp"
+            android:overScrollMode="never" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_commodity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_title"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/ll_sku"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/edit_sku"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_white"
+                android:hint="输入SKU编码"
+                android:inputType="numberDecimal"
+                android:maxLength="11"
+                android:padding="8dp"
+                android:textColorHint="@color/grey1"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_query"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_green"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="查询"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_clear_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="清空"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_classify_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_sku">
+
+            <LinearLayout
+                android:id="@+id/ll_today_one"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_today_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="当日待取"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view3"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_green" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_history_one"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_history_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="昨日待取"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view4"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_green"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"></LinearLayout>
+        </LinearLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_classify_one"
+            android:layout_marginTop="10dp"
+            android:overScrollMode="never" />
+    </RelativeLayout>
 </RelativeLayout>

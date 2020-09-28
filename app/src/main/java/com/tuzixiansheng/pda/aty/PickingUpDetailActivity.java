@@ -89,6 +89,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
     private TextView tv_out_of_stock, tv_original_delivery, tv_poor_quality, tv_replacement, tv_cancel, tv_sure;
     private int pos;
     private TDialog tDialog, tDialog1, tDialog2, tDialog3, tDialog4;
+    private String pos1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
     private void initView() {
         dataRepository = Injection.dataRepository(this);
         phone = getIntent().getStringExtra("phone");
+        pos1 = getIntent().getStringExtra("pos");
         tvTitle.setText("待取货(" + phone + ")");
         waitTodayAdapter = new WaitTodayAdapter(this);
         rvWaitToday.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -206,16 +208,24 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, PickedUpActivity.class));
-        finish();
+        if (pos1.equals("1")) {
+            finish();
+        } else {
+            startActivity(new Intent(this, PickedUpActivity.class));
+            finish();
+        }
     }
 
     @OnClick({R.id.iv_back, R.id.tv_pick})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                startActivity(new Intent(this, PickedUpActivity.class));
-                finish();
+                if (pos1.equals("1")) {
+                    finish();
+                } else {
+                    startActivity(new Intent(this, PickedUpActivity.class));
+                    finish();
+                }
                 break;
             case R.id.tv_pick:
                 showDialog();

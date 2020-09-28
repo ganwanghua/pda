@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".aty.fragment.CollectTodayFragment">
+    tools:context=".aty.fragment.CommodityFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
@@ -24,7 +24,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="#4fe3c1">
 
                 <TextView
                     android:layout_width="0dp"
@@ -33,7 +33,7 @@
                     android:gravity="center"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="昵称"
+                    android:text="SKU"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -44,7 +44,18 @@
                     android:gravity="center"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="手机号码"
+                    android:text="名称"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="规格"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -67,4 +78,5 @@
                 android:overScrollMode="never" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
 </RelativeLayout>
