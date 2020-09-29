@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pedaily.yc.ycdialoglib.dialog.loading.ViewLoading;
 import com.tuzixiansheng.pda.R;
 import com.tuzixiansheng.pda.adapter.CollectTodayAdapter;
 import com.tuzixiansheng.pda.aty.PickedDetailActivity;
@@ -81,6 +82,7 @@ public class PickedFragment extends Fragment implements CollectTodayAdapter.MyIt
     }
 
     private void pickUpList(String pickType, String phone) {
+        ViewLoading.show(getActivity());
         String token = SpUtil.getString(getActivity(), "token", "");
         String shopId = SpUtil.getString(getActivity(), "shopId", "");
         ModuleBean moduleBean = new ModuleBean();
@@ -92,11 +94,12 @@ public class PickedFragment extends Fragment implements CollectTodayAdapter.MyIt
         dataRepository.alreadyPickUpGoods(token, moduleBean, new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
-
+                ViewLoading.dismiss(getActivity());
             }
 
             @Override
             public void onSuccess(Object data) {
+                ViewLoading.dismiss(getActivity());
                 PickUpRecord pickUpRecord = (PickUpRecord) data;
                 if (pickUpRecord.getCode() == 200) {
                     if (pickUpRecord.getData() != null && pickUpRecord.getData().size() != 0) {

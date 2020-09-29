@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pedaily.yc.ycdialoglib.dialog.loading.ViewLoading;
 import com.tuzixiansheng.pda.R;
 import com.tuzixiansheng.pda.adapter.CollectTodayAdapter;
 import com.tuzixiansheng.pda.adapter.PickedDetailAdapter;
@@ -64,6 +65,7 @@ public class PickedDetailActivity extends BaseActivity {
     }
 
     private void pickedDetail(String phone) {
+        ViewLoading.show(this);
         String token = SpUtil.getString(this, "token", "");
         String shopId = SpUtil.getString(this, "shopId", "");
         String pickType = SpUtil.getString(this, "type", "");
@@ -74,11 +76,12 @@ public class PickedDetailActivity extends BaseActivity {
         dataRepository.pickedDetail(token, moduleBean, new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
-
+                ViewLoading.dismiss(PickedDetailActivity.this);
             }
 
             @Override
             public void onSuccess(Object data) {
+                ViewLoading.dismiss(PickedDetailActivity.this);
                 PickedDetail pickedDetail = (PickedDetail) data;
                 if (pickedDetail.getCode() == 200) {
                     if (pickedDetail.getData() != null && pickedDetail.getData().size() > 0) {

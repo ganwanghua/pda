@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pedaily.yc.ycdialoglib.dialog.loading.ViewLoading;
 import com.tuzixiansheng.pda.R;
 import com.tuzixiansheng.pda.adapter.CommodityAdapter;
 import com.tuzixiansheng.pda.bean.ModuleBean;
@@ -81,6 +82,7 @@ public class CommodityFragment extends Fragment implements CommodityAdapter.MyIt
     }
 
     private void pickUpList(String pickType, String skuCode) {
+        ViewLoading.show(getActivity());
         String token = SpUtil.getString(getActivity(), "token", "");
         String shopId = SpUtil.getString(getActivity(), "shopId", "");
         ModuleBean moduleBean = new ModuleBean();
@@ -90,12 +92,12 @@ public class CommodityFragment extends Fragment implements CommodityAdapter.MyIt
         dataRepository.pickUpListForGoods(token, moduleBean, new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
-
+                ViewLoading.dismiss(getActivity());
             }
 
             @Override
             public void onSuccess(Object data) {
-                Log.d("sdasd",skuCode);
+                ViewLoading.dismiss(getActivity());
                 PickUpListForGoods pickUpRecord = (PickUpListForGoods) data;
                 if (pickUpRecord.getCode() == 200) {
                     if (pickUpRecord.getData() != null && pickUpRecord.getData().size() != 0) {

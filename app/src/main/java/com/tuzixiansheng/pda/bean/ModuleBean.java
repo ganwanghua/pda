@@ -10,4 +10,6 @@ public class ModuleBean {
     public String dayType;
     public String beginTime;
     public String endTime;
+    public String phoneAndNickName;
+    public String pageNum;
 }

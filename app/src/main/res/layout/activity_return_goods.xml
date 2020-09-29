@@ -40,52 +40,157 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_phone"
+    <RelativeLayout
+        android:id="@+id/rl_return_goods"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_title">
+
+        <LinearLayout
+            android:id="@+id/ll_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/edit_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_white"
+                android:hint="输入手机号"
+                android:inputType="numberDecimal"
+                android:maxLength="11"
+                android:padding="8dp"
+                android:textColorHint="@color/grey1"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_query"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_bule"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="查询"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="清空"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_phone">
+
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_return_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/rl_title"
-        android:padding="10dp">
+        android:visibility="gone">
 
-        <EditText
-            android:id="@+id/edit_phone"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/ll_phone1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_white"
-            android:hint="输入手机号"
-            android:inputType="numberDecimal"
-            android:maxLength="11"
-            android:padding="8dp"
-            android:textColorHint="@color/grey1"
-            android:textSize="18sp" />
+            android:padding="10dp">
 
-        <TextView
-            android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/bg_bule"
-            android:paddingLeft="20dp"
-            android:paddingTop="8dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="8dp"
-            android:text="查询"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            <EditText
+                android:id="@+id/edit_phone1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_white"
+                android:hint="输入手机号/昵称"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:textColorHint="@color/grey1"
+                android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/tv_clear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_white"
-            android:paddingLeft="20dp"
-            android:paddingTop="8dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="8dp"
-            android:text="清空"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_query1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_bule"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="查询"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_clear1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="清空"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_phone1">
+
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </RelativeLayout>
 </RelativeLayout>

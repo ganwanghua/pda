@@ -90,7 +90,7 @@ public class PickedActivity extends BaseActivity {
     List<Fragment> fragments = new ArrayList<>();
     private TextView et_start, et_end;
     private TDialog tDialog;
-
+    private int pos = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initWhite();
@@ -117,6 +117,7 @@ public class PickedActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
+                    pos = 0;
                     view.setVisibility(View.VISIBLE);
                     view1.setVisibility(View.GONE);
                     view2.setVisibility(View.GONE);
@@ -124,6 +125,7 @@ public class PickedActivity extends BaseActivity {
                     view4.setVisibility(View.GONE);
                     SpUtil.saveString(PickedActivity.this, "type", "1");
                 } else if (position == 1) {
+                    pos = 1;
                     view.setVisibility(View.GONE);
                     view1.setVisibility(View.VISIBLE);
                     view2.setVisibility(View.GONE);
@@ -131,6 +133,7 @@ public class PickedActivity extends BaseActivity {
                     view4.setVisibility(View.GONE);
                     SpUtil.saveString(PickedActivity.this, "type", "2");
                 } else if (position == 2) {
+                    pos = 2;
                     view.setVisibility(View.GONE);
                     view1.setVisibility(View.GONE);
                     view2.setVisibility(View.VISIBLE);
@@ -138,6 +141,7 @@ public class PickedActivity extends BaseActivity {
                     view4.setVisibility(View.GONE);
                     SpUtil.saveString(PickedActivity.this, "type", "3");
                 } else if (position == 3) {
+                    pos = 3;
                     view.setVisibility(View.GONE);
                     view1.setVisibility(View.GONE);
                     view2.setVisibility(View.GONE);
@@ -181,6 +185,32 @@ public class PickedActivity extends BaseActivity {
                     public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
                         switch (view.getId()) {
                             case R.id.tv_cancel:
+                                if (pos == 0) {
+                                    view.setVisibility(View.VISIBLE);
+                                    view1.setVisibility(View.GONE);
+                                    view2.setVisibility(View.GONE);
+                                    view3.setVisibility(View.GONE);
+                                    view4.setVisibility(View.GONE);
+                                } else if (pos == 1) {
+                                    view.setVisibility(View.GONE);
+                                    view1.setVisibility(View.VISIBLE);
+                                    view2.setVisibility(View.GONE);
+                                    view3.setVisibility(View.GONE);
+                                    view4.setVisibility(View.GONE);
+                                } else if (pos == 2) {
+                                    view.setVisibility(View.GONE);
+                                    view1.setVisibility(View.GONE);
+                                    view2.setVisibility(View.VISIBLE);
+                                    view3.setVisibility(View.GONE);
+                                    view4.setVisibility(View.GONE);
+                                } else if (pos == 3) {
+                                    view.setVisibility(View.GONE);
+                                    view1.setVisibility(View.GONE);
+                                    view2.setVisibility(View.GONE);
+                                    view3.setVisibility(View.VISIBLE);
+                                    view4.setVisibility(View.GONE);
+                                }
+                                viewPager.setCurrentItem(pos);
                                 tDialog.dismiss();
                                 break;
                             case R.id.tv_sure:
@@ -270,6 +300,7 @@ public class PickedActivity extends BaseActivity {
                 editPhone.setText("");
                 break;
             case R.id.ll_today:
+                pos = 0;
                 view.setVisibility(View.VISIBLE);
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.GONE);
@@ -279,6 +310,7 @@ public class PickedActivity extends BaseActivity {
                 SpUtil.saveString(PickedActivity.this, "type", "1");
                 break;
             case R.id.ll_three_days:
+                pos = 1;
                 view.setVisibility(View.GONE);
                 view1.setVisibility(View.VISIBLE);
                 view2.setVisibility(View.GONE);
@@ -288,6 +320,7 @@ public class PickedActivity extends BaseActivity {
                 SpUtil.saveString(PickedActivity.this, "type", "2");
                 break;
             case R.id.ll_seven_days:
+                pos = 2;
                 view.setVisibility(View.GONE);
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
@@ -297,6 +330,7 @@ public class PickedActivity extends BaseActivity {
                 SpUtil.saveString(PickedActivity.this, "type", "3");
                 break;
             case R.id.ll_month:
+                pos = 3;
                 view.setVisibility(View.GONE);
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.GONE);

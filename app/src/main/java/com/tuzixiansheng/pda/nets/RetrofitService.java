@@ -6,10 +6,12 @@ import com.tuzixiansheng.pda.bean.PickUpDetailRecord;
 import com.tuzixiansheng.pda.bean.PickUpListForGoods;
 import com.tuzixiansheng.pda.bean.PickUpRecord;
 import com.tuzixiansheng.pda.bean.PickedDetail;
+import com.tuzixiansheng.pda.bean.ReturnGoods;
 
 import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
@@ -41,4 +43,12 @@ public interface RetrofitService {
     // 已取列表
     @POST("/pda/pdaInfo/pickedDetail")
     Observable<PickedDetail> pickedDetail(@Header("Authorization") String token, @Body ModuleBean moduleBean);
+
+    // 退货确认列表
+    @POST("/pda/pdaInfo/returnConfirmList/{shopId}")
+    Observable<ReturnGoods> returnGoods(@Header("Authorization") String token, @Path("shopId") String shopId, @Body ModuleBean moduleBean);
+
+    // 退货历史列表
+    @POST("/pda/pdaInfo/returnConfirmHistory/{shopId}")
+    Observable<ReturnGoods> returnConfirmHistory(@Header("Authorization") String token, @Path("shopId") String shopId, @Body ModuleBean moduleBean);
 }

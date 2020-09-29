@@ -9,6 +9,7 @@ import com.tuzixiansheng.pda.bean.PickUpDetailRecord;
 import com.tuzixiansheng.pda.bean.PickUpListForGoods;
 import com.tuzixiansheng.pda.bean.PickUpRecord;
 import com.tuzixiansheng.pda.bean.PickedDetail;
+import com.tuzixiansheng.pda.bean.ReturnGoods;
 
 import rx.Observable;
 import rx.Observer;
@@ -160,6 +161,50 @@ public class RemotDataSourceImpl implements RemotDataSource {
 
                     @Override
                     public void onNext(PickedDetail s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void returnGoods(String token, String shopId, ModuleBean moduleBean, final getCallback callback) {
+        Observable<ReturnGoods> observable = RetrofitHelper.getInstance(mContext).getServer().returnGoods(token, shopId, moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ReturnGoods>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ReturnGoods s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void returnConfirmHistory(String token, String shopId, ModuleBean moduleBean, final getCallback callback) {
+        Observable<ReturnGoods> observable = RetrofitHelper.getInstance(mContext).getServer().returnConfirmHistory(token, shopId, moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ReturnGoods>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ReturnGoods s) { // 请求成功
                         callback.onSuccess(s);
                     }
                 });

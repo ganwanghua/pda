@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lling.photopicker.PhotoPickerActivity;
+import com.pedaily.yc.ycdialoglib.dialog.loading.ViewLoading;
 import com.pedaily.yc.ycdialoglib.toast.ToastUtils;
 import com.timmy.tdialog.TDialog;
 import com.timmy.tdialog.base.BindViewHolder;
@@ -215,17 +216,19 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
     }
 
     private void pickUpDetail() {
+        ViewLoading.show(this);
         ModuleBean moduleBean = new ModuleBean();
         moduleBean.phone = phone;
         String token = SpUtil.getString(this, "token", "");
         dataRepository.pickUpDetail(token, moduleBean, new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
-
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
             }
 
             @Override
             public void onSuccess(Object data) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
                 PickUpDetailRecord pickUpDetailRecord = (PickUpDetailRecord) data;
                 if (pickUpDetailRecord.getCode() == 200) {
                     List<PickUpDetailRecord.DataBean> data1 = pickUpDetailRecord.getData();
