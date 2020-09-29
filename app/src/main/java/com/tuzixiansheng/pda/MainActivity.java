@@ -172,6 +172,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.ll_mine_contact:
                 llPickUp.setVisibility(View.VISIBLE);
+                editPhone.setFocusableInTouchMode(true);
+                editPhone.setFocusable(true);
+                editPhone.requestFocus();
                 break;
             case R.id.view:
                 llPickUp.setVisibility(View.GONE);

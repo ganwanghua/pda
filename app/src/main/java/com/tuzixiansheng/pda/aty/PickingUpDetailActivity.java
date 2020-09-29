@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -91,7 +92,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
     private IntentFilter mFilter;
     private DataRepository dataRepository;
     private String phone;
-    private TextView tv_out_of_stock, tv_original_delivery, tv_poor_quality, tv_replacement, tv_cancel, tv_sure;
+    private TextView tv_out_of_stock, tv_original_delivery, tv_poor_quality, tv_replacement, tv_cancel, tv_sure, tv_name;
     private int pos;
     private TDialog tDialog, tDialog1, tDialog2, tDialog3, tDialog4;
     private String pos1;
@@ -99,6 +100,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
     private ImageAdapter imageAdapter;
     private ArrayList<String> mPicList = new ArrayList<>();
     private RecyclerView recycler_view;
+    private EditText edit_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +147,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         //添加凭证图片
                         selectPic();
                     }
-                }else {
+                } else {
                     viewPluImg(position);
                 }
             }
@@ -327,7 +329,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                 .setScreenWidthAspect(this, 0.8f)
                 .setGravity(Gravity.CENTER)
                 .addOnClickListener(R.id.tv_out_of_stock, R.id.tv_original_delivery, R.id.tv_poor_quality,
-                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure, R.id.ll_sure)
+                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure, R.id.ll_sure, R.id.tv_name)
                 .setOnBindViewListener(new OnBindViewListener() {
                     @Override
                     public void bindView(BindViewHolder viewHolder) {
@@ -338,6 +340,8 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         tv_cancel = viewHolder.itemView.findViewById(R.id.tv_cancel);
                         tv_sure = viewHolder.itemView.findViewById(R.id.tv_sure);
                         ll_sure = viewHolder.itemView.findViewById(R.id.ll_sure);
+                        tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                        tv_name.setText(todayList.get(position).getSkuName());
                     }
                 })
                 .setOnViewClickListener(new OnViewClickListener() {
@@ -358,7 +362,39 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_green);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
-                                ll_sure.setVisibility(View.VISIBLE);
+                                ll_sure.setVisibility(View.GONE);
+                                tDialog2 = new TDialog.Builder(getSupportFragmentManager())
+                                        .setLayoutRes(R.layout.dialog_original_delivery)
+                                        .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
+                                        .setGravity(Gravity.CENTER)
+                                        .setCancelableOutside(false)
+                                        .addOnClickListener(R.id.edit_num, R.id.tv_cancel, R.id.tv_sure, R.id.tv_name)
+                                        .setOnBindViewListener(new OnBindViewListener() {
+                                            @Override
+                                            public void bindView(BindViewHolder viewHolder) {
+                                                edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
+                                                tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                                                tv_name.setText(todayList.get(position).getSkuName());
+//                                                originalDeliveryAdapter = new OriginalDeliveryAdapter(PickingUpDetailActivity.this);
+//                                                recycler_view.setLayoutManager(new LinearLayoutManager(PickingUpDetailActivity.this, LinearLayoutManager.VERTICAL, false));
+//                                                recycler_view.setAdapter(originalDeliveryAdapter);
+                                            }
+                                        })
+                                        .setOnViewClickListener(new OnViewClickListener() {
+                                            @Override
+                                            public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
+                                                switch (view.getId()) {
+                                                    case R.id.tv_cancel:
+                                                        tDialog2.dismiss();
+                                                        break;
+                                                    case R.id.tv_sure:
+                                                        tDialog2.dismiss();
+                                                        break;
+                                                }
+                                            }
+                                        })
+                                        .create()
+                                        .show();
                                 break;
                             case R.id.tv_poor_quality:
                                 pos = 3;
@@ -366,7 +402,39 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_green);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
-                                ll_sure.setVisibility(View.VISIBLE);
+                                ll_sure.setVisibility(View.GONE);
+                                tDialog4 = new TDialog.Builder(getSupportFragmentManager())
+                                        .setLayoutRes(R.layout.dialog_poor_quality)
+                                        .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
+                                        .setGravity(Gravity.CENTER)
+                                        .setCancelableOutside(false)
+                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .setOnBindViewListener(new OnBindViewListener() {
+                                            @Override
+                                            public void bindView(BindViewHolder viewHolder) {
+                                                recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                                                tv_name.setText(todayList.get(position).getSkuName());
+                                                initGridView();
+                                            }
+                                        })
+                                        .setOnViewClickListener(new OnViewClickListener() {
+                                            @Override
+                                            public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
+                                                switch (view.getId()) {
+                                                    case R.id.tv_cancel:
+                                                        tDialog4.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                    case R.id.tv_sure:
+                                                        tDialog4.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                }
+                                            }
+                                        })
+                                        .create()
+                                        .show();
                                 break;
                             case R.id.tv_replacement:
                                 pos = 4;
@@ -374,111 +442,45 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_green);
-                                ll_sure.setVisibility(View.VISIBLE);
+                                ll_sure.setVisibility(View.GONE);
+                                tDialog3 = new TDialog.Builder(getSupportFragmentManager())
+                                        .setLayoutRes(R.layout.dialog_replacement)
+                                        .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
+                                        .setGravity(Gravity.CENTER)
+                                        .setCancelableOutside(false)
+                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .setOnBindViewListener(new OnBindViewListener() {
+                                            @Override
+                                            public void bindView(BindViewHolder viewHolder) {
+                                                recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                                                tv_name.setText(todayList.get(position).getSkuName());
+                                                initGridView();
+                                            }
+                                        })
+                                        .setOnViewClickListener(new OnViewClickListener() {
+                                            @Override
+                                            public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
+                                                switch (view.getId()) {
+                                                    case R.id.tv_cancel:
+                                                        tDialog3.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                    case R.id.tv_sure:
+                                                        tDialog3.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                }
+                                            }
+                                        })
+                                        .create()
+                                        .show();
                                 break;
                             case R.id.tv_cancel:
                                 tDialog1.dismiss();
                                 break;
                             case R.id.tv_sure:
-                                if (pos == 1) {
-                                    tDialog1.dismiss();
-                                } else if (pos == 2) {
-                                    tDialog1.dismiss();
-                                    tDialog2 = new TDialog.Builder(getSupportFragmentManager())
-                                            .setLayoutRes(R.layout.dialog_original_delivery)
-                                            .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
-                                            .setGravity(Gravity.CENTER)
-                                            .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.recycler_view, R.id.tv_cancel, R.id.tv_sure)
-                                            .setOnBindViewListener(new OnBindViewListener() {
-                                                @Override
-                                                public void bindView(BindViewHolder viewHolder) {
-                                                    RecyclerView recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
-                                                    originalDeliveryAdapter = new OriginalDeliveryAdapter(PickingUpDetailActivity.this);
-                                                    recycler_view.setLayoutManager(new LinearLayoutManager(PickingUpDetailActivity.this, LinearLayoutManager.VERTICAL, false));
-                                                    recycler_view.setAdapter(originalDeliveryAdapter);
-                                                }
-                                            })
-                                            .setOnViewClickListener(new OnViewClickListener() {
-                                                @Override
-                                                public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
-                                                    switch (view.getId()) {
-                                                        case R.id.tv_cancel:
-                                                            tDialog2.dismiss();
-                                                            break;
-                                                        case R.id.tv_sure:
-                                                            tDialog2.dismiss();
-                                                            break;
-                                                    }
-                                                }
-                                            })
-                                            .create()
-                                            .show();
-                                } else if (pos == 3) {
-                                    tDialog1.dismiss();
-                                    tDialog4 = new TDialog.Builder(getSupportFragmentManager())
-                                            .setLayoutRes(R.layout.dialog_poor_quality)
-                                            .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
-                                            .setGravity(Gravity.CENTER)
-                                            .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
-                                            .setOnBindViewListener(new OnBindViewListener() {
-                                                @Override
-                                                public void bindView(BindViewHolder viewHolder) {
-                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
-                                                    initGridView();
-                                                }
-                                            })
-                                            .setOnViewClickListener(new OnViewClickListener() {
-                                                @Override
-                                                public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
-                                                    switch (view.getId()) {
-                                                        case R.id.tv_cancel:
-                                                            tDialog4.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                        case R.id.tv_sure:
-                                                            tDialog4.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                    }
-                                                }
-                                            })
-                                            .create()
-                                            .show();
-                                } else if (pos == 4) {
-                                    tDialog1.dismiss();
-                                    tDialog3 = new TDialog.Builder(getSupportFragmentManager())
-                                            .setLayoutRes(R.layout.dialog_replacement)
-                                            .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
-                                            .setGravity(Gravity.CENTER)
-                                            .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
-                                            .setOnBindViewListener(new OnBindViewListener() {
-                                                @Override
-                                                public void bindView(BindViewHolder viewHolder) {
-                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
-                                                    initGridView();
-                                                }
-                                            })
-                                            .setOnViewClickListener(new OnViewClickListener() {
-                                                @Override
-                                                public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
-                                                    switch (view.getId()) {
-                                                        case R.id.tv_cancel:
-                                                            tDialog3.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                        case R.id.tv_sure:
-                                                            tDialog3.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                    }
-                                                }
-                                            })
-                                            .create()
-                                            .show();
-                                }
+                                tDialog1.dismiss();
                                 break;
                         }
                     }
@@ -494,7 +496,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                 .setScreenWidthAspect(this, 0.8f)
                 .setGravity(Gravity.CENTER)
                 .addOnClickListener(R.id.tv_out_of_stock, R.id.tv_original_delivery, R.id.tv_poor_quality,
-                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure, R.id.ll_sure)
+                        R.id.tv_replacement, R.id.tv_cancel, R.id.tv_sure, R.id.ll_sure, R.id.tv_name)
                 .setOnBindViewListener(new OnBindViewListener() {
                     @Override
                     public void bindView(BindViewHolder viewHolder) {
@@ -505,6 +507,8 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         tv_cancel = viewHolder.itemView.findViewById(R.id.tv_cancel);
                         tv_sure = viewHolder.itemView.findViewById(R.id.tv_sure);
                         ll_sure = viewHolder.itemView.findViewById(R.id.ll_sure);
+                        tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                        tv_name.setText(historyList.get(position).getSkuName());
                     }
                 })
                 .setOnViewClickListener(new OnViewClickListener() {
@@ -525,7 +529,39 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_green);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
-                                ll_sure.setVisibility(View.VISIBLE);
+                                ll_sure.setVisibility(View.GONE);
+                                tDialog2 = new TDialog.Builder(getSupportFragmentManager())
+                                        .setLayoutRes(R.layout.dialog_original_delivery)
+                                        .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
+                                        .setGravity(Gravity.CENTER)
+                                        .setCancelableOutside(false)
+                                        .addOnClickListener(R.id.edit_num, R.id.tv_cancel, R.id.tv_sure, R.id.tv_name)
+                                        .setOnBindViewListener(new OnBindViewListener() {
+                                            @Override
+                                            public void bindView(BindViewHolder viewHolder) {
+                                                edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
+                                                tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                                                tv_name.setText(historyList.get(position).getSkuName());
+//                                                originalDeliveryAdapter = new OriginalDeliveryAdapter(PickingUpDetailActivity.this);
+//                                                recycler_view.setLayoutManager(new LinearLayoutManager(PickingUpDetailActivity.this, LinearLayoutManager.VERTICAL, false));
+//                                                recycler_view.setAdapter(originalDeliveryAdapter);
+                                            }
+                                        })
+                                        .setOnViewClickListener(new OnViewClickListener() {
+                                            @Override
+                                            public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
+                                                switch (view.getId()) {
+                                                    case R.id.tv_cancel:
+                                                        tDialog2.dismiss();
+                                                        break;
+                                                    case R.id.tv_sure:
+                                                        tDialog2.dismiss();
+                                                        break;
+                                                }
+                                            }
+                                        })
+                                        .create()
+                                        .show();
                                 break;
                             case R.id.tv_poor_quality:
                                 pos = 3;
@@ -533,7 +569,39 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_green);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_white_5);
-                                ll_sure.setVisibility(View.VISIBLE);
+                                ll_sure.setVisibility(View.GONE);
+                                tDialog4 = new TDialog.Builder(getSupportFragmentManager())
+                                        .setLayoutRes(R.layout.dialog_poor_quality)
+                                        .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
+                                        .setGravity(Gravity.CENTER)
+                                        .setCancelableOutside(false)
+                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .setOnBindViewListener(new OnBindViewListener() {
+                                            @Override
+                                            public void bindView(BindViewHolder viewHolder) {
+                                                recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                                                tv_name.setText(historyList.get(position).getSkuName());
+                                                initGridView();
+                                            }
+                                        })
+                                        .setOnViewClickListener(new OnViewClickListener() {
+                                            @Override
+                                            public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
+                                                switch (view.getId()) {
+                                                    case R.id.tv_cancel:
+                                                        tDialog4.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                    case R.id.tv_sure:
+                                                        tDialog4.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                }
+                                            }
+                                        })
+                                        .create()
+                                        .show();
                                 break;
                             case R.id.tv_replacement:
                                 pos = 4;
@@ -541,111 +609,45 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tv_original_delivery.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_poor_quality.setBackgroundResource(R.drawable.bg_white_5);
                                 tv_replacement.setBackgroundResource(R.drawable.bg_green);
-                                ll_sure.setVisibility(View.VISIBLE);
+                                ll_sure.setVisibility(View.GONE);
+                                tDialog3 = new TDialog.Builder(getSupportFragmentManager())
+                                        .setLayoutRes(R.layout.dialog_replacement)
+                                        .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
+                                        .setGravity(Gravity.CENTER)
+                                        .setCancelableOutside(false)
+                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .setOnBindViewListener(new OnBindViewListener() {
+                                            @Override
+                                            public void bindView(BindViewHolder viewHolder) {
+                                                recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
+                                                tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
+                                                tv_name.setText(historyList.get(position).getSkuName());
+                                                initGridView();
+                                            }
+                                        })
+                                        .setOnViewClickListener(new OnViewClickListener() {
+                                            @Override
+                                            public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
+                                                switch (view.getId()) {
+                                                    case R.id.tv_cancel:
+                                                        tDialog3.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                    case R.id.tv_sure:
+                                                        tDialog3.dismiss();
+                                                        mPicList.clear();
+                                                        break;
+                                                }
+                                            }
+                                        })
+                                        .create()
+                                        .show();
                                 break;
                             case R.id.tv_cancel:
                                 tDialog1.dismiss();
                                 break;
                             case R.id.tv_sure:
-                                if (pos == 1) {
-                                    tDialog1.dismiss();
-                                } else if (pos == 2) {
-                                    tDialog1.dismiss();
-                                    tDialog2 = new TDialog.Builder(getSupportFragmentManager())
-                                            .setLayoutRes(R.layout.dialog_original_delivery)
-                                            .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
-                                            .setGravity(Gravity.CENTER)
-                                            .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.recycler_view, R.id.tv_cancel, R.id.tv_sure)
-                                            .setOnBindViewListener(new OnBindViewListener() {
-                                                @Override
-                                                public void bindView(BindViewHolder viewHolder) {
-                                                    RecyclerView recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
-                                                    originalDeliveryAdapter = new OriginalDeliveryAdapter(PickingUpDetailActivity.this);
-                                                    recycler_view.setLayoutManager(new LinearLayoutManager(PickingUpDetailActivity.this, LinearLayoutManager.VERTICAL, false));
-                                                    recycler_view.setAdapter(originalDeliveryAdapter);
-                                                }
-                                            })
-                                            .setOnViewClickListener(new OnViewClickListener() {
-                                                @Override
-                                                public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
-                                                    switch (view.getId()) {
-                                                        case R.id.tv_cancel:
-                                                            tDialog2.dismiss();
-                                                            break;
-                                                        case R.id.tv_sure:
-                                                            tDialog2.dismiss();
-                                                            break;
-                                                    }
-                                                }
-                                            })
-                                            .create()
-                                            .show();
-                                } else if (pos == 3) {
-                                    tDialog1.dismiss();
-                                    tDialog4 = new TDialog.Builder(getSupportFragmentManager())
-                                            .setLayoutRes(R.layout.dialog_poor_quality)
-                                            .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
-                                            .setGravity(Gravity.CENTER)
-                                            .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
-                                            .setOnBindViewListener(new OnBindViewListener() {
-                                                @Override
-                                                public void bindView(BindViewHolder viewHolder) {
-                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
-                                                    initGridView();
-                                                }
-                                            })
-                                            .setOnViewClickListener(new OnViewClickListener() {
-                                                @Override
-                                                public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
-                                                    switch (view.getId()) {
-                                                        case R.id.tv_cancel:
-                                                            tDialog4.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                        case R.id.tv_sure:
-                                                            tDialog4.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                    }
-                                                }
-                                            })
-                                            .create()
-                                            .show();
-                                } else if (pos == 4) {
-                                    tDialog1.dismiss();
-                                    tDialog3 = new TDialog.Builder(getSupportFragmentManager())
-                                            .setLayoutRes(R.layout.dialog_replacement)
-                                            .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
-                                            .setGravity(Gravity.CENTER)
-                                            .setCancelableOutside(false)
-                                            .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view)
-                                            .setOnBindViewListener(new OnBindViewListener() {
-                                                @Override
-                                                public void bindView(BindViewHolder viewHolder) {
-                                                    recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
-                                                    initGridView();
-                                                }
-                                            })
-                                            .setOnViewClickListener(new OnViewClickListener() {
-                                                @Override
-                                                public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
-                                                    switch (view.getId()) {
-                                                        case R.id.tv_cancel:
-                                                            tDialog3.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                        case R.id.tv_sure:
-                                                            tDialog3.dismiss();
-                                                            mPicList.clear();
-                                                            break;
-                                                    }
-                                                }
-                                            })
-                                            .create()
-                                            .show();
-                                }
+                                tDialog1.dismiss();
                                 break;
                         }
                     }

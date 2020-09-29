@@ -6,11 +6,14 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center"
         android:text="11101 土豆 250g"
         android:textColor="@color/black"
         android:textSize="20sp" />
@@ -25,11 +28,44 @@
         android:textColor="@color/black"
         android:textSize="20sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:overScrollMode="never"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="第一份重量"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="g"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/edit_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_company"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:inputType="number"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/tv_num"
+            android:background="@drawable/bg_white_5" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

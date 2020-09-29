@@ -141,9 +141,14 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
                             shopBean.setAddress(shop.getAddress());
                             MyApp.getInstance().getDaoSession().getShopBeanDao().insert(shopBean);
                         }
-                        if (mList.size() > 0) {
+                        if (mList.size() > 1) {
                             llShop.setVisibility(View.VISIBLE);
                             wheelPicker.setData(mList);
+                        }else if (mList.size() == 1) {
+                            SpUtil.saveString(LoginActivity.this, "shopId", shops.get(0).getId());
+                            SpUtil.saveString(LoginActivity.this, "shop", mList.get(0));
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
                         }
                     }
                 } else {
