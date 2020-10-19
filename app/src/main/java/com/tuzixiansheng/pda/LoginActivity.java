@@ -19,6 +19,7 @@ import com.tuzixiansheng.pda.base.BaseActivity;
 import com.tuzixiansheng.pda.base.MyApp;
 import com.tuzixiansheng.pda.bean.ModuleBean;
 import com.tuzixiansheng.pda.bean.PdaLoginRecord;
+import com.tuzixiansheng.pda.bean.PdaShopList;
 import com.tuzixiansheng.pda.bean.ShopBean;
 import com.tuzixiansheng.pda.nets.DataRepository;
 import com.tuzixiansheng.pda.nets.Injection;
@@ -57,7 +58,7 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
     @BindView(R.id.tv_sure)
     TextView tvSure;
     private DataRepository dataRepository;
-    private List<PdaLoginRecord.DataBean.ShopsBean> shops;
+    private List<PdaShopList.DataBean> shops;
     private List<String> mList = new ArrayList<>();
     private boolean isClick;
 
@@ -76,12 +77,12 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
             startActivity(intent);
             finish();
         }
-        etLoginPhone.setText(SpUtil.getString(this,"username",""));
-        etPassword.setText(SpUtil.getString(this,"password",""));
-        if(SpUtil.getString(LoginActivity.this, "isChecked", "").equals("1")){
+        etLoginPhone.setText(SpUtil.getString(this, "username", ""));
+        etPassword.setText(SpUtil.getString(this, "password", ""));
+        if (SpUtil.getString(LoginActivity.this, "isChecked", "").equals("1")) {
             cbLogin.setChecked(true);
             isClick = true;
-        }else {
+        } else {
             cbLogin.setChecked(false);
             isClick = false;
         }
@@ -90,10 +91,10 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
         cbLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     isClick = true;
                     SpUtil.saveString(LoginActivity.this, "isChecked", "1");
-                }else {
+                } else {
                     isClick = false;
                     SpUtil.saveString(LoginActivity.this, "isChecked", "0");
                 }
@@ -104,9 +105,9 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
     private void loginNet(String phone, String pwd) {
         ViewLoading.show(this);
         ModuleBean moduleBean = new ModuleBean();
-        moduleBean.username = phone;
+        moduleBean.account = phone;
         moduleBean.password = pwd;
-        dataRepository.pdaLogin("3", moduleBean, new RemotDataSource.getCallback() {
+        dataRepository.pdaLogin(moduleBean, new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
                 ViewLoading.dismiss(LoginActivity.this);
@@ -116,43 +117,63 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
             public void onSuccess(Object data) {
                 ViewLoading.dismiss(LoginActivity.this);
                 PdaLoginRecord pdaLoginRecord = (PdaLoginRecord) data;
-                if (pdaLoginRecord.getCode() == 200) {
+                if (pdaLoginRecord.getCode() == 1) {
                     if (pdaLoginRecord.getData() != null) {
                         SpUtil.saveString(LoginActivity.this, "username", phone);
-                        if(isClick){
+                        if (isClick) {
                             SpUtil.saveString(LoginActivity.this, "password", pwd);
-                        }else {
+                        } else {
                             SpUtil.saveString(LoginActivity.this, "password", "");
                         }
-                        shops = pdaLoginRecord.getData().getShops();
-                        SpUtil.saveString(LoginActivity.this, "token", pdaLoginRecord.getData().getToken());
-                        SpUtil.saveString(LoginActivity.this, "isLogin", "1");
-                        ToastUtils.showToast("登录成功");
+                        if(pdaLoginRecord.getData().getIs_store() == 1){
+                            SpUtil.saveString(LoginActivity.this, "token", pdaLoginRecord.getData().getUserinfo().getToken());
+                            SpUtil.saveString(LoginActivity.this, "isLogin", "1");
+                            ToastUtils.showToast("登录成功");
+                            pdaList(pdaLoginRecord.getData().getUserinfo().getToken());
+                        }else {
+                            ToastUtils.showToast("暂无权限");
+                        }
+                    }
+                } else {
+                    ToastUtils.showToast(pdaLoginRecord.getMsg());
+                }
+            }
+        });
+    }
 
-                        for (PdaLoginRecord.DataBean.ShopsBean shop : shops) {
+
+    private void pdaList(String token) {
+        dataRepository.pdaList(token, new RemotDataSource.getCallback() {
+            @Override
+            public void onFailure(String info) {
+
+            }
+
+            @Override
+            public void onSuccess(Object data) {
+                PdaShopList pdaShopList = (PdaShopList) data;
+                if (pdaShopList.getCode() == 1) {
+                    if (pdaShopList.getData() != null) {
+                        shops = pdaShopList.getData();
+                        for (PdaShopList.DataBean shop : shops) {
                             mList.add(shop.getName());
                             ShopBean shopBean = new ShopBean();
-                            shopBean.setShopId(shop.getId());
+                            shopBean.setShopId(shop.getId() + "");
                             shopBean.setName(shop.getName());
                             shopBean.setPhone(shop.getPhone());
-                            shopBean.setLinker(shop.getLinker());
-                            shopBean.setDistance(shop.getDistance());
-                            shopBean.setCode(shop.getCode());
                             shopBean.setAddress(shop.getAddress());
                             MyApp.getInstance().getDaoSession().getShopBeanDao().insert(shopBean);
                         }
                         if (mList.size() > 1) {
                             llShop.setVisibility(View.VISIBLE);
                             wheelPicker.setData(mList);
-                        }else if (mList.size() == 1) {
-                            SpUtil.saveString(LoginActivity.this, "shopId", shops.get(0).getId());
+                        } else if (mList.size() == 1) {
+                            SpUtil.saveInt(LoginActivity.this, "shopId", shops.get(0).getId());
                             SpUtil.saveString(LoginActivity.this, "shop", mList.get(0));
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }
                     }
-                } else {
-                    ToastUtils.showToast(pdaLoginRecord.getMsg());
                 }
             }
         });
@@ -164,9 +185,6 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
             case R.id.tv_login:
                 String phone = etLoginPhone.getText().toString();
                 String pwd = etPassword.getText().toString();
-//                phone = "15155119947";
-                phone = "18356025739";
-                pwd = "123456";
                 String telRegex = "[1][3456789]\\d{9}";
                 boolean matches = phone.matches(telRegex);
                 if (TextUtils.isEmpty(phone)) {
@@ -181,7 +199,7 @@ public class LoginActivity extends BaseActivity implements View.OnTouchListener 
                 }
                 break;
             case R.id.tv_sure:
-                SpUtil.saveString(LoginActivity.this, "shopId", shops.get(wheelPicker.getCurrentItemPosition()).getId());
+                SpUtil.saveInt(LoginActivity.this, "shopId", shops.get(wheelPicker.getCurrentItemPosition()).getId());
                 SpUtil.saveString(LoginActivity.this, "shop", mList.get(wheelPicker.getCurrentItemPosition()));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();

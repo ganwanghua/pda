@@ -2,9 +2,9 @@ package com.tuzixiansheng.pda.bean;
 
 public class NumBean {
     String type;
-    int num;
+    String num;
 
-    public NumBean(String type, int num) {
+    public NumBean(String type, String num) {
         this.type = type;
         this.num = num;
     }
@@ -17,11 +17,11 @@ public class NumBean {
         this.type = type;
     }
 
-    public int getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(String num) {
         this.num = num;
     }
 }

@@ -34,7 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_title"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/edit_phone"
@@ -82,6 +83,7 @@
         android:id="@+id/ll_classify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/ll_phone">
 
         <LinearLayout
@@ -96,7 +98,7 @@
                 android:id="@+id/tv_today"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="今日"
+                android:text="昨日"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -121,7 +123,7 @@
                 android:id="@+id/tv_three_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3天"
+                android:text="今日"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -130,8 +132,8 @@
                 android:layout_width="30dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="5dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_green" />
+                android:background="@drawable/bg_green"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -156,8 +158,8 @@
                 android:layout_width="30dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="5dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_green" />
+                android:background="@drawable/bg_green"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -182,8 +184,8 @@
                 android:layout_width="30dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="5dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_green" />
+                android:background="@drawable/bg_green"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -208,8 +210,8 @@
                 android:layout_width="30dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="5dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_green" />
+                android:background="@drawable/bg_green"
+                android:visibility="gone" />
 
         </LinearLayout>
     </LinearLayout>
@@ -218,7 +220,7 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
         android:layout_below="@id/ll_classify"
+        android:layout_marginTop="10dp"
         android:overScrollMode="never" />
 </RelativeLayout>

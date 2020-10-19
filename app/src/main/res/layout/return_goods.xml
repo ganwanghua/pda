@@ -5,6 +5,7 @@
     android:layout_marginLeft="10dp"
     android:layout_marginTop="20dp"
     android:layout_marginRight="10dp"
+    android:visibility="gone"
     android:background="@drawable/bg_white"
     android:orientation="vertical"
     android:paddingBottom="12dp">

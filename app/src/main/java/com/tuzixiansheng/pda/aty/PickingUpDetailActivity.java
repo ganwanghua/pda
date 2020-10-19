@@ -21,6 +21,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.lling.photopicker.PhotoPickerActivity;
 import com.pedaily.yc.ycdialoglib.dialog.loading.ViewLoading;
 import com.pedaily.yc.ycdialoglib.toast.ToastUtils;
@@ -28,6 +29,7 @@ import com.timmy.tdialog.TDialog;
 import com.timmy.tdialog.base.BindViewHolder;
 import com.timmy.tdialog.listener.OnBindViewListener;
 import com.timmy.tdialog.listener.OnViewClickListener;
+import com.tuzixiansheng.pda.LoginActivity;
 import com.tuzixiansheng.pda.R;
 import com.tuzixiansheng.pda.adapter.ImageAdapter;
 import com.tuzixiansheng.pda.adapter.OriginalDeliveryAdapter;
@@ -37,6 +39,7 @@ import com.tuzixiansheng.pda.adapter.WaitTodayAdapter;
 import com.tuzixiansheng.pda.base.BaseActivity;
 import com.tuzixiansheng.pda.bean.ModuleBean;
 import com.tuzixiansheng.pda.bean.PickUpDetailRecord;
+import com.tuzixiansheng.pda.bean.VerifyBean;
 import com.tuzixiansheng.pda.nets.DataRepository;
 import com.tuzixiansheng.pda.nets.Injection;
 import com.tuzixiansheng.pda.nets.RemotDataSource;
@@ -44,7 +47,9 @@ import com.tuzixiansheng.pda.utils.SpUtil;
 import com.tuzixiansheng.pda.utils.StatusBarUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,10 +89,9 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
     CardView card2;
     private WaitTodayAdapter waitTodayAdapter;
     private WaitAgoAdapter waitAgoAdapter;
-    private PickedUpAdapter pickedUpAdapter;
-    private OriginalDeliveryAdapter originalDeliveryAdapter;
-    private List<PickUpDetailRecord.DataBean> todayList = new ArrayList<>();
-    private List<PickUpDetailRecord.DataBean> historyList = new ArrayList<>();
+    //    private PickedUpAdapter pickedUpAdapter;
+    private List<PickUpDetailRecord.TodayListBean> todayList = new ArrayList<>();
+    private List<PickUpDetailRecord.YesterdaylistBean> historyList = new ArrayList<>();
     private BroadcastReceiver mReceiver;
     private IntentFilter mFilter;
     private DataRepository dataRepository;
@@ -185,7 +189,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
 
     private void initView() {
         dataRepository = Injection.dataRepository(this);
-        phone = getIntent().getStringExtra("phone");
+        phone = getIntent().getStringExtra("code");
         pos1 = getIntent().getStringExtra("pos");
         tvTitle.setText("待取货(" + phone + ")");
         waitTodayAdapter = new WaitTodayAdapter(this);
@@ -198,9 +202,9 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
         rvWaitAgo.setAdapter(waitAgoAdapter);
         waitAgoAdapter.setOnItemClickListener(this);
 
-        pickedUpAdapter = new PickedUpAdapter(this);
-        rvPickedUp.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rvPickedUp.setAdapter(pickedUpAdapter);
+//        pickedUpAdapter = new PickedUpAdapter(this);
+//        rvPickedUp.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+//        rvPickedUp.setAdapter(pickedUpAdapter);
 
         pickUpDetail();
 
@@ -208,21 +212,42 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                 final String scanResult = intent.getStringExtra("value");
-                Log.d("dsadsadsa", scanResult);
-                //                mTvScanResult.append(scanResult);
-//                mTvScanResult.invalidate();
+                toVerify(scanResult);
             }
         };
+    }
+
+    private void toVerify(String scanResult) {
+        ViewLoading.show(this);
+        ModuleBean moduleBean = new ModuleBean();
+        moduleBean.barCode = scanResult;
+        moduleBean.store_id = SpUtil.getInt(PickingUpDetailActivity.this, "shopId", -1);
+        moduleBean.user_id = SpUtil.getString(PickingUpDetailActivity.this, "userId", "");
+        dataRepository.toVerify(moduleBean, new RemotDataSource.getCallback() {
+            @Override
+            public void onFailure(String info) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+            }
+
+            @Override
+            public void onSuccess(Object data) {
+                VerifyBean verifyBean = (VerifyBean) data;
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+                if (verifyBean.getCode().equals("0000")) {
+                    ToastUtils.showToast(verifyBean.getResult());
+                    pickUpDetails();
+                }
+            }
+        });
     }
 
     private void pickUpDetail() {
         ViewLoading.show(this);
         ModuleBean moduleBean = new ModuleBean();
-        moduleBean.phone = phone;
-        String token = SpUtil.getString(this, "token", "");
-        dataRepository.pickUpDetail(token, moduleBean, new RemotDataSource.getCallback() {
+        moduleBean.code = phone;
+        moduleBean.store_id = SpUtil.getInt(PickingUpDetailActivity.this, "shopId", -1);
+        dataRepository.pickUpDetail(moduleBean, new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
                 ViewLoading.dismiss(PickingUpDetailActivity.this);
@@ -232,9 +257,11 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
             public void onSuccess(Object data) {
                 ViewLoading.dismiss(PickingUpDetailActivity.this);
                 PickUpDetailRecord pickUpDetailRecord = (PickUpDetailRecord) data;
-                if (pickUpDetailRecord.getCode() == 200) {
-                    List<PickUpDetailRecord.DataBean> data1 = pickUpDetailRecord.getData();
-                    if (data1 == null || data1.size() == 0) {
+                if (pickUpDetailRecord.getCode().equals("0000")) {
+                    SpUtil.saveString(PickingUpDetailActivity.this, "userId", pickUpDetailRecord.getUser_id());
+                    todayList = pickUpDetailRecord.getTodaylist();
+                    historyList = pickUpDetailRecord.getYesterdaylist();
+                    if (todayList.size() == 0 && historyList.size() == 0) {
                         tvEmpty.setVisibility(View.VISIBLE);
                         nestedScrollView.setVisibility(View.GONE);
                         tvPick.setVisibility(View.GONE);
@@ -243,13 +270,6 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         tvEmpty.setVisibility(View.GONE);
                         nestedScrollView.setVisibility(View.VISIBLE);
                         tvPick.setVisibility(View.VISIBLE);
-                        for (PickUpDetailRecord.DataBean datum : data1) {
-                            if (datum.isIsNow() == true) {
-                                todayList.add(datum);
-                            } else {
-                                historyList.add(datum);
-                            }
-                        }
                     }
 
                     if (todayList.size() == 0) {
@@ -264,7 +284,61 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                     waitAgoAdapter.setData(historyList);
 
                 } else {
-                    ToastUtils.showToast(pickUpDetailRecord.getMsg());
+                    tvEmpty.setVisibility(View.VISIBLE);
+                    nestedScrollView.setVisibility(View.GONE);
+                    tvPick.setVisibility(View.GONE);
+                    ToastUtils.showToast(pickUpDetailRecord.getResult());
+                }
+            }
+        });
+    }
+
+    private void pickUpDetails() {
+        ViewLoading.show(this);
+        ModuleBean moduleBean = new ModuleBean();
+        moduleBean.user_id = SpUtil.getString(PickingUpDetailActivity.this, "userId", "");
+        moduleBean.store_id = SpUtil.getInt(PickingUpDetailActivity.this, "shopId", -1);
+        dataRepository.pickUpDetail(moduleBean, new RemotDataSource.getCallback() {
+            @Override
+            public void onFailure(String info) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+            }
+
+            @Override
+            public void onSuccess(Object data) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+                PickUpDetailRecord pickUpDetailRecord = (PickUpDetailRecord) data;
+                if (pickUpDetailRecord.getCode().equals("0000")) {
+                    SpUtil.saveString(PickingUpDetailActivity.this, "userId", pickUpDetailRecord.getUser_id());
+                    todayList = pickUpDetailRecord.getTodaylist();
+                    historyList = pickUpDetailRecord.getYesterdaylist();
+                    if (todayList.size() == 0 && historyList.size() == 0) {
+                        tvEmpty.setVisibility(View.VISIBLE);
+                        nestedScrollView.setVisibility(View.GONE);
+                        tvPick.setVisibility(View.GONE);
+                        return;
+                    } else {
+                        tvEmpty.setVisibility(View.GONE);
+                        nestedScrollView.setVisibility(View.VISIBLE);
+                        tvPick.setVisibility(View.VISIBLE);
+                    }
+
+                    if (todayList.size() == 0) {
+                        tvWaitToday.setVisibility(View.GONE);
+                        card.setVisibility(View.GONE);
+                    } else if (historyList.size() == 0) {
+                        tvWaitHistory.setVisibility(View.GONE);
+                        card1.setVisibility(View.GONE);
+                    }
+
+                    waitTodayAdapter.setData(todayList);
+                    waitAgoAdapter.setData(historyList);
+
+                } else {
+                    tvEmpty.setVisibility(View.VISIBLE);
+                    nestedScrollView.setVisibility(View.GONE);
+                    tvPick.setVisibility(View.GONE);
+                    ToastUtils.showToast(pickUpDetailRecord.getResult());
                 }
             }
         });
@@ -292,7 +366,11 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                 }
                 break;
             case R.id.tv_pick:
-                showDialog();
+                if (todayList.size() == 0 && historyList.size() == 0) {
+                    finish();
+                }else {
+                    showDialog();
+                }
                 break;
         }
     }
@@ -341,7 +419,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         tv_sure = viewHolder.itemView.findViewById(R.id.tv_sure);
                         ll_sure = viewHolder.itemView.findViewById(R.id.ll_sure);
                         tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                        tv_name.setText(todayList.get(position).getSkuName());
+                        tv_name.setText(todayList.get(position).getGoods_title());
                     }
                 })
                 .setOnViewClickListener(new OnViewClickListener() {
@@ -374,7 +452,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                             public void bindView(BindViewHolder viewHolder) {
                                                 edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
                                                 tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                                                tv_name.setText(todayList.get(position).getSkuName());
+                                                tv_name.setText(todayList.get(position).getGoods_title());
 //                                                originalDeliveryAdapter = new OriginalDeliveryAdapter(PickingUpDetailActivity.this);
 //                                                recycler_view.setLayoutManager(new LinearLayoutManager(PickingUpDetailActivity.this, LinearLayoutManager.VERTICAL, false));
 //                                                recycler_view.setAdapter(originalDeliveryAdapter);
@@ -388,6 +466,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                         tDialog2.dismiss();
                                                         break;
                                                     case R.id.tv_sure:
+                                                        noCode(todayList.get(position).getSku_code(), edit_num.getText().toString());
                                                         tDialog2.dismiss();
                                                         break;
                                                 }
@@ -408,13 +487,14 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                         .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                         .setGravity(Gravity.CENTER)
                                         .setCancelableOutside(false)
-                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name, R.id.edit_num)
                                         .setOnBindViewListener(new OnBindViewListener() {
                                             @Override
                                             public void bindView(BindViewHolder viewHolder) {
+                                                edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
                                                 recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
                                                 tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                                                tv_name.setText(todayList.get(position).getSkuName());
+                                                tv_name.setText(todayList.get(position).getGoods_title());
                                                 initGridView();
                                             }
                                         })
@@ -427,6 +507,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                         mPicList.clear();
                                                         break;
                                                     case R.id.tv_sure:
+                                                        refuse(todayList.get(position).getSku_code(), edit_num.getText().toString());
                                                         tDialog4.dismiss();
                                                         mPicList.clear();
                                                         break;
@@ -448,13 +529,14 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                         .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                         .setGravity(Gravity.CENTER)
                                         .setCancelableOutside(false)
-                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .addOnClickListener(R.id.edit_num, R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
                                         .setOnBindViewListener(new OnBindViewListener() {
                                             @Override
                                             public void bindView(BindViewHolder viewHolder) {
                                                 recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
                                                 tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                                                tv_name.setText(todayList.get(position).getSkuName());
+                                                edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
+                                                tv_name.setText(todayList.get(position).getGoods_title());
                                                 initGridView();
                                             }
                                         })
@@ -467,6 +549,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                         mPicList.clear();
                                                         break;
                                                     case R.id.tv_sure:
+                                                        barter(todayList.get(position).getSku_code(), edit_num.getText().toString());
                                                         tDialog3.dismiss();
                                                         mPicList.clear();
                                                         break;
@@ -480,6 +563,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tDialog1.dismiss();
                                 break;
                             case R.id.tv_sure:
+                                defect(todayList.get(position).getSku_code());
                                 tDialog1.dismiss();
                                 break;
                         }
@@ -487,6 +571,105 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                 })
                 .create()
                 .show();
+    }
+
+    private void refuse(String sku_code, String refuseReason) {
+        ViewLoading.show(this);
+        ModuleBean moduleBean = new ModuleBean();
+        moduleBean.skuCode = sku_code;
+        moduleBean.refuseReason = refuseReason;
+        moduleBean.store_id = SpUtil.getInt(PickingUpDetailActivity.this, "shopId", -1);
+        moduleBean.user_id = SpUtil.getString(PickingUpDetailActivity.this, "userId", "");
+        dataRepository.refuse(moduleBean, new RemotDataSource.getCallback() {
+            @Override
+            public void onFailure(String info) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+            }
+
+            @Override
+            public void onSuccess(Object data) {
+                VerifyBean verifyBean = (VerifyBean) data;
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+                if (verifyBean.getCode().equals("0000")) {
+                    ToastUtils.showToast(verifyBean.getResult());
+                    pickUpDetails();
+                }
+            }
+        });
+    }
+
+    private void barter(String sku_code, String refuseReason) {
+        ViewLoading.show(this);
+        ModuleBean moduleBean = new ModuleBean();
+        moduleBean.skuCode = sku_code;
+        moduleBean.barterReason = refuseReason;
+        moduleBean.store_id = SpUtil.getInt(PickingUpDetailActivity.this, "shopId", -1);
+        moduleBean.user_id = SpUtil.getString(PickingUpDetailActivity.this, "userId", "");
+        dataRepository.barter(moduleBean, new RemotDataSource.getCallback() {
+            @Override
+            public void onFailure(String info) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+            }
+
+            @Override
+            public void onSuccess(Object data) {
+                VerifyBean verifyBean = (VerifyBean) data;
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+                if (verifyBean.getCode().equals("0000")) {
+                    ToastUtils.showToast(verifyBean.getResult());
+                    pickUpDetails();
+                }
+            }
+        });
+    }
+
+    private void defect(String sku_code) {
+        ViewLoading.show(this);
+        ModuleBean moduleBean = new ModuleBean();
+        moduleBean.skuCode = sku_code;
+        moduleBean.store_id = SpUtil.getInt(PickingUpDetailActivity.this, "shopId", -1);
+        moduleBean.user_id = SpUtil.getString(PickingUpDetailActivity.this, "userId", "");
+        dataRepository.defect(moduleBean, new RemotDataSource.getCallback() {
+            @Override
+            public void onFailure(String info) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+            }
+
+            @Override
+            public void onSuccess(Object data) {
+                VerifyBean verifyBean = (VerifyBean) data;
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+                if (verifyBean.getCode().equals("0000")) {
+                    ToastUtils.showToast(verifyBean.getResult());
+                    pickUpDetails();
+                }
+            }
+        });
+    }
+
+    private void noCode(String sku_code, String acceptWeights) {
+        ViewLoading.show(this);
+        ModuleBean moduleBean = new ModuleBean();
+        moduleBean.skuCode = sku_code;
+        moduleBean.acceptWeights = acceptWeights;
+        moduleBean.store_id = SpUtil.getInt(PickingUpDetailActivity.this, "shopId", -1);
+        moduleBean.user_id = SpUtil.getString(PickingUpDetailActivity.this, "userId", "");
+        dataRepository.noCode(moduleBean, new RemotDataSource.getCallback() {
+            @Override
+            public void onFailure(String info) {
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+            }
+
+            @Override
+            public void onSuccess(Object data) {
+                VerifyBean verifyBean = (VerifyBean) data;
+                ViewLoading.dismiss(PickingUpDetailActivity.this);
+                if (verifyBean.getCode().equals("0000")) {
+                    ToastUtils.showToast(verifyBean.getResult());
+                    pickUpDetails();
+                }
+            }
+        });
     }
 
     @Override
@@ -508,7 +691,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                         tv_sure = viewHolder.itemView.findViewById(R.id.tv_sure);
                         ll_sure = viewHolder.itemView.findViewById(R.id.ll_sure);
                         tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                        tv_name.setText(historyList.get(position).getSkuName());
+                        tv_name.setText(historyList.get(position).getGoods_title());
                     }
                 })
                 .setOnViewClickListener(new OnViewClickListener() {
@@ -541,7 +724,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                             public void bindView(BindViewHolder viewHolder) {
                                                 edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
                                                 tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                                                tv_name.setText(historyList.get(position).getSkuName());
+                                                tv_name.setText(historyList.get(position).getGoods_title());
 //                                                originalDeliveryAdapter = new OriginalDeliveryAdapter(PickingUpDetailActivity.this);
 //                                                recycler_view.setLayoutManager(new LinearLayoutManager(PickingUpDetailActivity.this, LinearLayoutManager.VERTICAL, false));
 //                                                recycler_view.setAdapter(originalDeliveryAdapter);
@@ -555,6 +738,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                         tDialog2.dismiss();
                                                         break;
                                                     case R.id.tv_sure:
+                                                        noCode(historyList.get(position).getSku_code(), edit_num.getText().toString());
                                                         tDialog2.dismiss();
                                                         break;
                                                 }
@@ -575,13 +759,14 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                         .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                         .setGravity(Gravity.CENTER)
                                         .setCancelableOutside(false)
-                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .addOnClickListener(R.id.edit_num, R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
                                         .setOnBindViewListener(new OnBindViewListener() {
                                             @Override
                                             public void bindView(BindViewHolder viewHolder) {
                                                 recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
                                                 tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                                                tv_name.setText(historyList.get(position).getSkuName());
+                                                edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
+                                                tv_name.setText(historyList.get(position).getGoods_title());
                                                 initGridView();
                                             }
                                         })
@@ -594,6 +779,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                         mPicList.clear();
                                                         break;
                                                     case R.id.tv_sure:
+                                                        refuse(historyList.get(position).getSku_code(), edit_num.getText().toString());
                                                         tDialog4.dismiss();
                                                         mPicList.clear();
                                                         break;
@@ -615,13 +801,14 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                         .setScreenWidthAspect(PickingUpDetailActivity.this, 0.8f)
                                         .setGravity(Gravity.CENTER)
                                         .setCancelableOutside(false)
-                                        .addOnClickListener(R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
+                                        .addOnClickListener(R.id.edit_num, R.id.tv_cancel, R.id.tv_sure, R.id.recycler_view, R.id.tv_name)
                                         .setOnBindViewListener(new OnBindViewListener() {
                                             @Override
                                             public void bindView(BindViewHolder viewHolder) {
                                                 recycler_view = viewHolder.itemView.findViewById(R.id.recycler_view);
                                                 tv_name = viewHolder.itemView.findViewById(R.id.tv_name);
-                                                tv_name.setText(historyList.get(position).getSkuName());
+                                                edit_num = viewHolder.itemView.findViewById(R.id.edit_num);
+                                                tv_name.setText(historyList.get(position).getGoods_title());
                                                 initGridView();
                                             }
                                         })
@@ -634,6 +821,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                                         mPicList.clear();
                                                         break;
                                                     case R.id.tv_sure:
+                                                        barter(historyList.get(position).getSku_code(), edit_num.getText().toString());
                                                         tDialog3.dismiss();
                                                         mPicList.clear();
                                                         break;
@@ -647,6 +835,7 @@ public class PickingUpDetailActivity extends BaseActivity implements WaitTodayAd
                                 tDialog1.dismiss();
                                 break;
                             case R.id.tv_sure:
+                                defect(historyList.get(position).getSku_code());
                                 tDialog1.dismiss();
                                 break;
                         }

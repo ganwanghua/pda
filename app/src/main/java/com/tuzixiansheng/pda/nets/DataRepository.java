@@ -29,13 +29,43 @@ public class DataRepository implements RemotDataSource {
     }
 
     @Override
-    public void pdaLogin(String terminal, ModuleBean moduleBean, getCallback callback) {
-        mRemoteDataSource.pdaLogin(terminal, moduleBean, callback);
+    public void pdaLogin(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.pdaLogin(moduleBean, callback);
     }
 
     @Override
-    public void pickUpDetail(String token, ModuleBean moduleBean, getCallback callback) {
-        mRemoteDataSource.pickUpDetail(token, moduleBean, callback);
+    public void pdaList(String token, getCallback callback) {
+        mRemoteDataSource.pdaList(token, callback);
+    }
+
+    @Override
+    public void pickUpDetail(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.pickUpDetail(moduleBean, callback);
+    }
+
+    @Override
+    public void toVerify(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.toVerify(moduleBean, callback);
+    }
+
+    @Override
+    public void defect(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.defect(moduleBean, callback);
+    }
+
+    @Override
+    public void noCode(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.noCode(moduleBean, callback);
+    }
+
+    @Override
+    public void refuse(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.refuse(moduleBean, callback);
+    }
+
+    @Override
+    public void barter(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.barter(moduleBean, callback);
     }
 
     @Override
@@ -44,13 +74,13 @@ public class DataRepository implements RemotDataSource {
     }
 
     @Override
-    public void pickUpListForGoods(String token, ModuleBean moduleBean, getCallback callback) {
-        mRemoteDataSource.pickUpListForGoods(token, moduleBean, callback);
+    public void pickUpListForGoods(ModuleBean moduleBean, getCallback callback) {
+        mRemoteDataSource.pickUpListForGoods(moduleBean, callback);
     }
 
     @Override
-    public void alreadyPickUpGoods(String token, ModuleBean moduleBean, getCallback callback) {
-        mRemoteDataSource.alreadyPickUpGoods(token, moduleBean, callback);
+    public void alreadyPickUpGoods(String token, String date_type, String date, String type, int page, int store_id, getCallback callback) {
+        mRemoteDataSource.alreadyPickUpGoods(token, date_type, date, type, page, store_id, callback);
     }
 
     @Override

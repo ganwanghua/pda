@@ -19,11 +19,11 @@ import java.util.List;
 public class CollectTodayAdapter extends RecyclerView.Adapter<CollectTodayAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<PickUpRecord.DataBean> mList = new ArrayList<>();
+    private List<PickUpRecord.DataBeanX.DataBean> mList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
 
-    public void setData(List<PickUpRecord.DataBean> data) {
-        mList.addAll(data);
+    public void setData(List<PickUpRecord.DataBeanX.DataBean> data) {
+        mList = data;
         notifyDataSetChanged();
     }
 
@@ -47,9 +47,9 @@ public class CollectTodayAdapter extends RecyclerView.Adapter<CollectTodayAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.tv_item_nickname.setText(mList.get(position).getNickName());
-        holder.tv_item_phone.setText(mList.get(position).getPhone());
-        holder.tv_specifications.setText(mList.get(position).getPickNum() + "件");
+        holder.tv_item_nickname.setText(mList.get(position).getNickname());
+        holder.tv_item_phone.setText(mList.get(position).getMobile());
+        holder.tv_specifications.setText(mList.get(position).getOrder_num() + "件");
         holder.ll_wait_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

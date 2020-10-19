@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         mReceiver = null;
         mFilter = null;
-        MyApp.Controll.close();
+//        MyApp.Controll.close();
         super.onDestroy();
     }
 
@@ -121,9 +121,10 @@ public class MainActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
 
                 final String scanResult = intent.getStringExtra("value");
-                Log.d("dsadsadsa", scanResult);
-                //                mTvScanResult.append(scanResult);
-//                mTvScanResult.invalidate();
+                Intent intent1 = new Intent(MainActivity.this, PickingUpDetailActivity.class);
+                intent1.putExtra("code", scanResult);
+                intent1.putExtra("pos", "2");
+                startActivity(intent1);
             }
         };
     }
@@ -157,7 +158,7 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_sure:
-                SpUtil.saveString(this, "shopId", historyList.get(wheelPicker.getCurrentItemPosition()).getShopId());
+                SpUtil.saveInt(this, "shopId", Integer.parseInt(historyList.get(wheelPicker.getCurrentItemPosition()).getShopId()));
                 SpUtil.saveString(this, "shop", mList.get(wheelPicker.getCurrentItemPosition()));
                 homeAddress.setText(mList.get(wheelPicker.getCurrentItemPosition()));
                 llShop.setVisibility(View.GONE);
@@ -193,7 +194,7 @@ public class MainActivity extends BaseActivity {
                     } else {
                         llPickUp.setVisibility(View.GONE);
                         Intent intent = new Intent(this, PickingUpDetailActivity.class);
-                        intent.putExtra("phone", editPhone.getText().toString());
+                        intent.putExtra("code", editPhone.getText().toString());
                         intent.putExtra("pos", "2");
                         startActivity(intent);
                     }

@@ -23,7 +23,7 @@ import java.util.List;
 
 public class PickedUpAdapter extends RecyclerView.Adapter<PickedUpAdapter.WaitTodayViewHolder> {
     private LayoutInflater mInflater;
-    private List<PickUpDetailRecord.DataBean> mShowItems;
+    private List<PickUpDetailRecord.EndListBean> mShowItems;
     private Context context;
 
     public PickedUpAdapter(Context context) {
@@ -42,10 +42,10 @@ public class PickedUpAdapter extends RecyclerView.Adapter<PickedUpAdapter.WaitTo
 
     @Override
     public void onBindViewHolder(WaitTodayViewHolder holder, final int position) {
-        holder.tv_item_nickname.setText(mShowItems.get(position).getSkuCode());
-        holder.tv_item_phone.setText(mShowItems.get(position).getSkuName());
-        holder.tv_item_num.setText(mShowItems.get(position).getSkuNum() + "件");
-        holder.tv_specifications.setText(mShowItems.get(position).getSkuStandard());
+//        holder.tv_item_nickname.setText(mShowItems.get(position).getSkuCode());
+//        holder.tv_item_phone.setText(mShowItems.get(position).getSkuName());
+//        holder.tv_item_num.setText(mShowItems.get(position).getSkuNum() + "件");
+//        holder.tv_specifications.setText(mShowItems.get(position).getSkuStandard());
         holder.ll_wait_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +62,7 @@ public class PickedUpAdapter extends RecyclerView.Adapter<PickedUpAdapter.WaitTo
         return mShowItems == null ? 0 : mShowItems.size();
     }
 
-    public void setData(List<PickUpDetailRecord.DataBean> list) {
+    public void setData(List<PickUpDetailRecord.EndListBean> list) {
         mShowItems = list;
         notifyDataSetChanged();
     }

@@ -49,7 +49,7 @@ public class OriginalDeliveryAdapter extends RecyclerView.Adapter<OriginalDelive
         return 2;
     }
 
-    public void setData(List<PickUpDetailRecord.DataBean> list) {
+    public void setData(List<PickUpDetailRecord.TodayListBean> list) {
         notifyDataSetChanged();
     }
 

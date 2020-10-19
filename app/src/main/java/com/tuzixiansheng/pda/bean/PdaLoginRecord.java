@@ -1,18 +1,26 @@
 package com.tuzixiansheng.pda.bean;
 
-import java.util.List;
-
 public class PdaLoginRecord {
 
     /**
-     * msg : 操作成功
-     * code : 200
-     * data : {"shops":[{"id":"46bbb6a66c3147c7acc141ad684fd43d","name":"王笛测试002","address":null,"linker":null,"phone":null,"code":null,"distance":null}],"token":"eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjIwZDk2YTEyLTY5YTItNDgyZi04MWNlLTBkNzI2MzY5YWVkZiJ9.QJyeEE1KIgU-aBBBGyU6_L6WOHgF5sWzKS7e1HMw-ar8u4p6mfwm_sgY2qoYHFHJtHS7Wl00vdvqNWtmCfWRcQ"}
+     * code : 1
+     * msg : Logged in successful
+     * time : 1602648006
+     * data : {"userinfo":{"id":5353,"username":"","nickname":"恒","mobile":"18356025739","avatar":"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTK5clyqaJ3DMRqpb0NMt17ZFWWibRYjicQT5Ghic7l9wicq8czAreUxic2EQibciaOUCicmHzDaQZapefDhZQ/132","score":209,"token":"7a48cc28-6ab4-49e2-a93a-e25f7a6abebb","user_id":5353,"createtime":1602648006,"expiretime":1605240006,"expires_in":2592000}}
      */
 
-    private String msg;
     private int code;
+    private String msg;
+    private String time;
     private DataBean data;
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
 
     public String getMsg() {
         return msg;
@@ -22,12 +30,12 @@ public class PdaLoginRecord {
         this.msg = msg;
     }
 
-    public int getCode() {
-        return code;
+    public String getTime() {
+        return time;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public DataBean getData() {
@@ -40,104 +48,142 @@ public class PdaLoginRecord {
 
     public static class DataBean {
         /**
-         * shops : [{"id":"46bbb6a66c3147c7acc141ad684fd43d","name":"王笛测试002","address":null,"linker":null,"phone":null,"code":null,"distance":null}]
-         * token : eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjIwZDk2YTEyLTY5YTItNDgyZi04MWNlLTBkNzI2MzY5YWVkZiJ9.QJyeEE1KIgU-aBBBGyU6_L6WOHgF5sWzKS7e1HMw-ar8u4p6mfwm_sgY2qoYHFHJtHS7Wl00vdvqNWtmCfWRcQ
+         * userinfo : {"id":5353,"username":"","nickname":"恒","mobile":"18356025739","avatar":"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTK5clyqaJ3DMRqpb0NMt17ZFWWibRYjicQT5Ghic7l9wicq8czAreUxic2EQibciaOUCicmHzDaQZapefDhZQ/132","score":209,"token":"7a48cc28-6ab4-49e2-a93a-e25f7a6abebb","user_id":5353,"createtime":1602648006,"expiretime":1605240006,"expires_in":2592000}
          */
 
-        private String token;
-        private List<ShopsBean> shops;
+        private UserinfoBean userinfo;
+        private int is_store;
 
-        public String getToken() {
-            return token;
+        public int getIs_store() {
+            return is_store;
         }
 
-        public void setToken(String token) {
-            this.token = token;
+        public void setIs_store(int is_store) {
+            this.is_store = is_store;
         }
 
-        public List<ShopsBean> getShops() {
-            return shops;
+        public UserinfoBean getUserinfo() {
+            return userinfo;
         }
 
-        public void setShops(List<ShopsBean> shops) {
-            this.shops = shops;
+        public void setUserinfo(UserinfoBean userinfo) {
+            this.userinfo = userinfo;
         }
 
-        public static class ShopsBean {
+        public static class UserinfoBean {
             /**
-             * id : 46bbb6a66c3147c7acc141ad684fd43d
-             * name : 王笛测试002
-             * address : null
-             * linker : null
-             * phone : null
-             * code : null
-             * distance : null
+             * id : 5353
+             * username :
+             * nickname : 恒
+             * mobile : 18356025739
+             * avatar : https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTK5clyqaJ3DMRqpb0NMt17ZFWWibRYjicQT5Ghic7l9wicq8czAreUxic2EQibciaOUCicmHzDaQZapefDhZQ/132
+             * score : 209
+             * token : 7a48cc28-6ab4-49e2-a93a-e25f7a6abebb
+             * user_id : 5353
+             * createtime : 1602648006
+             * expiretime : 1605240006
+             * expires_in : 2592000
              */
 
-            private String id;
-            private String name;
-            private String address;
-            private String linker;
-            private String phone;
-            private String code;
-            private String distance;
+            private int id;
+            private String username;
+            private String nickname;
+            private String mobile;
+            private String avatar;
+            private int score;
+            private String token;
+            private int user_id;
+            private int createtime;
+            private int expiretime;
+            private int expires_in;
 
-            public String getAddress() {
-                return address;
-            }
-
-            public void setAddress(String address) {
-                this.address = address;
-            }
-
-            public String getLinker() {
-                return linker;
-            }
-
-            public void setLinker(String linker) {
-                this.linker = linker;
-            }
-
-            public String getPhone() {
-                return phone;
-            }
-
-            public void setPhone(String phone) {
-                this.phone = phone;
-            }
-
-            public String getCode() {
-                return code;
-            }
-
-            public void setCode(String code) {
-                this.code = code;
-            }
-
-            public String getDistance() {
-                return distance;
-            }
-
-            public void setDistance(String distance) {
-                this.distance = distance;
-            }
-
-            public String getId() {
+            public int getId() {
                 return id;
             }
 
-            public void setId(String id) {
+            public void setId(int id) {
                 this.id = id;
             }
 
-            public String getName() {
-                return name;
+            public String getUsername() {
+                return username;
             }
 
-            public void setName(String name) {
-                this.name = name;
+            public void setUsername(String username) {
+                this.username = username;
             }
 
+            public String getNickname() {
+                return nickname;
+            }
+
+            public void setNickname(String nickname) {
+                this.nickname = nickname;
+            }
+
+            public String getMobile() {
+                return mobile;
+            }
+
+            public void setMobile(String mobile) {
+                this.mobile = mobile;
+            }
+
+            public String getAvatar() {
+                return avatar;
+            }
+
+            public void setAvatar(String avatar) {
+                this.avatar = avatar;
+            }
+
+            public int getScore() {
+                return score;
+            }
+
+            public void setScore(int score) {
+                this.score = score;
+            }
+
+            public String getToken() {
+                return token;
+            }
+
+            public void setToken(String token) {
+                this.token = token;
+            }
+
+            public int getUser_id() {
+                return user_id;
+            }
+
+            public void setUser_id(int user_id) {
+                this.user_id = user_id;
+            }
+
+            public int getCreatetime() {
+                return createtime;
+            }
+
+            public void setCreatetime(int createtime) {
+                this.createtime = createtime;
+            }
+
+            public int getExpiretime() {
+                return expiretime;
+            }
+
+            public void setExpiretime(int expiretime) {
+                this.expiretime = expiretime;
+            }
+
+            public int getExpires_in() {
+                return expires_in;
+            }
+
+            public void setExpires_in(int expires_in) {
+                this.expires_in = expires_in;
+            }
         }
     }
 }

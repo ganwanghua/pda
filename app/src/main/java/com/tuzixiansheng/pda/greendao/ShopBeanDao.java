@@ -28,10 +28,7 @@ public class ShopBeanDao extends AbstractDao<ShopBean, Long> {
         public final static Property ShopId = new Property(1, String.class, "shopId", false, "SHOP_ID");
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
         public final static Property Address = new Property(3, String.class, "address", false, "ADDRESS");
-        public final static Property Linker = new Property(4, String.class, "linker", false, "LINKER");
-        public final static Property Phone = new Property(5, String.class, "phone", false, "PHONE");
-        public final static Property Code = new Property(6, String.class, "code", false, "CODE");
-        public final static Property Distance = new Property(7, String.class, "distance", false, "DISTANCE");
+        public final static Property Phone = new Property(4, String.class, "phone", false, "PHONE");
     }
 
 
@@ -51,10 +48,7 @@ public class ShopBeanDao extends AbstractDao<ShopBean, Long> {
                 "\"SHOP_ID\" TEXT," + // 1: shopId
                 "\"NAME\" TEXT," + // 2: name
                 "\"ADDRESS\" TEXT," + // 3: address
-                "\"LINKER\" TEXT," + // 4: linker
-                "\"PHONE\" TEXT," + // 5: phone
-                "\"CODE\" TEXT," + // 6: code
-                "\"DISTANCE\" TEXT);"); // 7: distance
+                "\"PHONE\" TEXT);"); // 4: phone
     }
 
     /** Drops the underlying database table. */
@@ -87,24 +81,9 @@ public class ShopBeanDao extends AbstractDao<ShopBean, Long> {
             stmt.bindString(4, address);
         }
  
-        String linker = entity.getLinker();
-        if (linker != null) {
-            stmt.bindString(5, linker);
-        }
- 
         String phone = entity.getPhone();
         if (phone != null) {
-            stmt.bindString(6, phone);
-        }
- 
-        String code = entity.getCode();
-        if (code != null) {
-            stmt.bindString(7, code);
-        }
- 
-        String distance = entity.getDistance();
-        if (distance != null) {
-            stmt.bindString(8, distance);
+            stmt.bindString(5, phone);
         }
     }
 
@@ -132,24 +111,9 @@ public class ShopBeanDao extends AbstractDao<ShopBean, Long> {
             stmt.bindString(4, address);
         }
  
-        String linker = entity.getLinker();
-        if (linker != null) {
-            stmt.bindString(5, linker);
-        }
- 
         String phone = entity.getPhone();
         if (phone != null) {
-            stmt.bindString(6, phone);
-        }
- 
-        String code = entity.getCode();
-        if (code != null) {
-            stmt.bindString(7, code);
-        }
- 
-        String distance = entity.getDistance();
-        if (distance != null) {
-            stmt.bindString(8, distance);
+            stmt.bindString(5, phone);
         }
     }
 
@@ -165,10 +129,7 @@ public class ShopBeanDao extends AbstractDao<ShopBean, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // shopId
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // address
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // linker
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // phone
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // code
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // distance
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // phone
         );
         return entity;
     }
@@ -179,10 +140,7 @@ public class ShopBeanDao extends AbstractDao<ShopBean, Long> {
         entity.setShopId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setAddress(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setLinker(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setPhone(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setCode(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setDistance(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setPhone(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     @Override

@@ -37,14 +37,16 @@
             android:padding="15dp"
             android:text="商品维度"
             android:textColor="#44c6a8"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_title">
+        android:layout_below="@id/rl_title"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/ll_phone"
@@ -191,8 +193,7 @@
         android:id="@+id/rl_commodity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_title"
-        android:visibility="gone">
+        android:layout_below="@id/rl_title">
 
         <LinearLayout
             android:id="@+id/ll_sku"
@@ -260,7 +261,7 @@
                     android:id="@+id/tv_today_one"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="当日待取"
+                    android:text="当日盘点"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -285,7 +286,7 @@
                     android:id="@+id/tv_history_one"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="昨日待取"
+                    android:text="昨日盘点"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -300,11 +301,30 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_history_two"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_history_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="逾期盘点"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_green"
+                    android:visibility="gone" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <androidx.viewpager.widget.ViewPager

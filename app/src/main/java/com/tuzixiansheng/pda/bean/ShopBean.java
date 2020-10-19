@@ -11,21 +11,15 @@ public class ShopBean {
     private String shopId;
     private String name;
     private String address;
-    private String linker;
     private String phone;
-    private String code;
-    private String distance;
-    @Generated(hash = 572118630)
+    @Generated(hash = 2111858680)
     public ShopBean(Long id, String shopId, String name, String address,
-            String linker, String phone, String code, String distance) {
+            String phone) {
         this.id = id;
         this.shopId = shopId;
         this.name = name;
         this.address = address;
-        this.linker = linker;
         this.phone = phone;
-        this.code = code;
-        this.distance = distance;
     }
     @Generated(hash = 748345971)
     public ShopBean() {
@@ -54,28 +48,11 @@ public class ShopBean {
     public void setAddress(String address) {
         this.address = address;
     }
-    public String getLinker() {
-        return this.linker;
-    }
-    public void setLinker(String linker) {
-        this.linker = linker;
-    }
     public String getPhone() {
         return this.phone;
     }
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    public String getCode() {
-        return this.code;
-    }
-    public void setCode(String code) {
-        this.code = code;
-    }
-    public String getDistance() {
-        return this.distance;
-    }
-    public void setDistance(String distance) {
-        this.distance = distance;
-    }
+  
 }

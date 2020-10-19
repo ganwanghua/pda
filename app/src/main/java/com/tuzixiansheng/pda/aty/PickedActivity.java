@@ -91,6 +91,7 @@ public class PickedActivity extends BaseActivity {
     private TextView et_start, et_end;
     private TDialog tDialog;
     private int pos = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initWhite();
@@ -102,9 +103,18 @@ public class PickedActivity extends BaseActivity {
     }
 
     private void initView() {
-        SpUtil.saveString(PickedActivity.this, "type", "1");
         for (int i = 0; i < 5; i++) {
-            fragments.add(new PickedFragment(i + 1 + ""));
+            if (i == 0) {
+                fragments.add(new PickedFragment("yesterday"));
+            } else if (i == 1) {
+                fragments.add(new PickedFragment("today"));
+            } else if (i == 2) {
+                fragments.add(new PickedFragment("week"));
+            } else if (i == 3) {
+                fragments.add(new PickedFragment("month"));
+            } else if (i == 4) {
+                fragments.add(new PickedFragment("custom"));
+            }
         }
         FragmentAdapter adatper = new FragmentAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adatper);
@@ -123,7 +133,7 @@ public class PickedActivity extends BaseActivity {
                     view2.setVisibility(View.GONE);
                     view3.setVisibility(View.GONE);
                     view4.setVisibility(View.GONE);
-                    SpUtil.saveString(PickedActivity.this, "type", "1");
+                    SpUtil.saveString(PickedActivity.this, "type", "yesterday");
                 } else if (position == 1) {
                     pos = 1;
                     view.setVisibility(View.GONE);
@@ -131,7 +141,7 @@ public class PickedActivity extends BaseActivity {
                     view2.setVisibility(View.GONE);
                     view3.setVisibility(View.GONE);
                     view4.setVisibility(View.GONE);
-                    SpUtil.saveString(PickedActivity.this, "type", "2");
+                    SpUtil.saveString(PickedActivity.this, "type", "today");
                 } else if (position == 2) {
                     pos = 2;
                     view.setVisibility(View.GONE);
@@ -139,7 +149,7 @@ public class PickedActivity extends BaseActivity {
                     view2.setVisibility(View.VISIBLE);
                     view3.setVisibility(View.GONE);
                     view4.setVisibility(View.GONE);
-                    SpUtil.saveString(PickedActivity.this, "type", "3");
+                    SpUtil.saveString(PickedActivity.this, "type", "week");
                 } else if (position == 3) {
                     pos = 3;
                     view.setVisibility(View.GONE);
@@ -147,7 +157,7 @@ public class PickedActivity extends BaseActivity {
                     view2.setVisibility(View.GONE);
                     view3.setVisibility(View.VISIBLE);
                     view4.setVisibility(View.GONE);
-                    SpUtil.saveString(PickedActivity.this, "type", "4");
+                    SpUtil.saveString(PickedActivity.this, "type", "month");
                 } else if (position == 4) {
                     view.setVisibility(View.GONE);
                     view1.setVisibility(View.GONE);
@@ -155,7 +165,7 @@ public class PickedActivity extends BaseActivity {
                     view3.setVisibility(View.GONE);
                     view4.setVisibility(View.VISIBLE);
                     showDialog();
-                    SpUtil.saveString(PickedActivity.this, "type", "5");
+                    SpUtil.saveString(PickedActivity.this, "type", "custom");
                 }
             }
 
@@ -214,6 +224,7 @@ public class PickedActivity extends BaseActivity {
                                 tDialog.dismiss();
                                 break;
                             case R.id.tv_sure:
+                                EventBus.getDefault().post(et_start.getText().toString() + "," + et_end.getText().toString());
                                 tDialog.dismiss();
                                 break;
                             case R.id.et_start:
@@ -307,7 +318,7 @@ public class PickedActivity extends BaseActivity {
                 view3.setVisibility(View.GONE);
                 view4.setVisibility(View.GONE);
                 viewPager.setCurrentItem(0);
-                SpUtil.saveString(PickedActivity.this, "type", "1");
+                SpUtil.saveString(PickedActivity.this, "type", "yesterday");
                 break;
             case R.id.ll_three_days:
                 pos = 1;
@@ -317,7 +328,7 @@ public class PickedActivity extends BaseActivity {
                 view3.setVisibility(View.GONE);
                 view4.setVisibility(View.GONE);
                 viewPager.setCurrentItem(1);
-                SpUtil.saveString(PickedActivity.this, "type", "2");
+                SpUtil.saveString(PickedActivity.this, "type", "today");
                 break;
             case R.id.ll_seven_days:
                 pos = 2;
@@ -327,7 +338,7 @@ public class PickedActivity extends BaseActivity {
                 view3.setVisibility(View.GONE);
                 view4.setVisibility(View.GONE);
                 viewPager.setCurrentItem(2);
-                SpUtil.saveString(PickedActivity.this, "type", "3");
+                SpUtil.saveString(PickedActivity.this, "type", "week");
                 break;
             case R.id.ll_month:
                 pos = 3;
@@ -337,7 +348,7 @@ public class PickedActivity extends BaseActivity {
                 view3.setVisibility(View.VISIBLE);
                 view4.setVisibility(View.GONE);
                 viewPager.setCurrentItem(3);
-                SpUtil.saveString(PickedActivity.this, "type", "4");
+                SpUtil.saveString(PickedActivity.this, "type", "month");
                 break;
             case R.id.ll_other:
                 view.setVisibility(View.GONE);
@@ -346,7 +357,7 @@ public class PickedActivity extends BaseActivity {
                 view3.setVisibility(View.GONE);
                 view4.setVisibility(View.VISIBLE);
                 viewPager.setCurrentItem(4);
-                SpUtil.saveString(PickedActivity.this, "type", "5");
+                SpUtil.saveString(PickedActivity.this, "type", "custom");
                 break;
         }
     }

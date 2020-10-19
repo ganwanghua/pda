@@ -23,8 +23,9 @@ import java.util.List;
 
 public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoViewHolder> {
     private LayoutInflater mInflater;
-    private List<PickUpDetailRecord.DataBean> mShowItems;
+    private List<PickUpDetailRecord.YesterdaylistBean> mShowItems;
     private Context context;
+
     public WaitAgoAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
@@ -41,11 +42,12 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
 
     @Override
     public void onBindViewHolder(WaitAgoViewHolder holder, final int position) {
-//        holder.tvName.setText(mShowItems.get(position));
-        holder.tv_item_nickname.setText(mShowItems.get(position).getSkuCode());
-        holder.tv_item_phone.setText(mShowItems.get(position).getSkuName());
-        holder.tv_item_num.setText(mShowItems.get(position).getSkuNum()+"件");
-        holder.tv_specifications.setText(mShowItems.get(position).getSkuStandard());
+        if (mShowItems.size() > 0) {
+            holder.tv_item_nickname.setText(mShowItems.get(position).getSku_code());
+            holder.tv_item_phone.setText(mShowItems.get(position).getGoods_title());
+            holder.tv_item_num.setText(mShowItems.get(position).getGoods_num() + "件");
+            holder.tv_specification.setText(mShowItems.get(position).getGoods_sku_text());
+        }
         holder.ll_wait_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +64,7 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
         return mShowItems == null ? 0 : mShowItems.size();
     }
 
-    public void setData(List<PickUpDetailRecord.DataBean> list) {
+    public void setData(List<PickUpDetailRecord.YesterdaylistBean> list) {
         mShowItems = list;
         notifyDataSetChanged();
     }
@@ -85,7 +87,7 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
         private final TextView tv_item_nickname;
         private final TextView tv_item_phone;
         private final TextView tv_item_num;
-        private final TextView tv_specifications;
+        private final TextView tv_specification;
 
         public WaitAgoViewHolder(View itemView) {
             super(itemView);
@@ -93,7 +95,7 @@ public class WaitAgoAdapter extends RecyclerView.Adapter<WaitAgoAdapter.WaitAgoV
             tv_item_nickname = itemView.findViewById(R.id.tv_item_nickname);
             tv_item_phone = itemView.findViewById(R.id.tv_item_phone);
             tv_item_num = itemView.findViewById(R.id.tv_item_num);
-            tv_specifications = itemView.findViewById(R.id.tv_specifications);
+            tv_specification = itemView.findViewById(R.id.tv_specification);
         }
     }
 

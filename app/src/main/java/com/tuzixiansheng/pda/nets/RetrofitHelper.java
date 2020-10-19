@@ -29,6 +29,7 @@ public class RetrofitHelper {
     public NetworkMonitor networkMonitor;
     private static RetrofitHelper instance = null;
     private Retrofit mRetrofit = null;
+    private Retrofit mRetrofit1 = null;
 
     public static RetrofitHelper getInstance(Context context) {
         if (instance == null) {
@@ -57,6 +58,12 @@ public class RetrofitHelper {
 
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(mContext.getResources().getString(R.string.serverhost))
+                .client(okHttpClientBuilder.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        mRetrofit1 = new Retrofit.Builder()
+                .baseUrl(mContext.getResources().getString(R.string.serverhost1))
                 .client(okHttpClientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -92,5 +99,9 @@ public class RetrofitHelper {
      */
     public RetrofitService getServer() {
         return mRetrofit.create(RetrofitService.class);
+    }
+
+    public RetrofitService getServer1() {
+        return mRetrofit1.create(RetrofitService.class);
     }
 }

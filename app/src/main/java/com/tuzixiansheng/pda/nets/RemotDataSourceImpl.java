@@ -5,12 +5,15 @@ import android.content.Context;
 
 import com.tuzixiansheng.pda.bean.ModuleBean;
 import com.tuzixiansheng.pda.bean.PdaLoginRecord;
+import com.tuzixiansheng.pda.bean.PdaShopList;
 import com.tuzixiansheng.pda.bean.PickUpDetailRecord;
 import com.tuzixiansheng.pda.bean.PickUpListForGoods;
 import com.tuzixiansheng.pda.bean.PickUpRecord;
 import com.tuzixiansheng.pda.bean.PickedDetail;
 import com.tuzixiansheng.pda.bean.ReturnGoods;
+import com.tuzixiansheng.pda.bean.VerifyBean;
 
+import retrofit2.http.Query;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -35,8 +38,8 @@ public class RemotDataSourceImpl implements RemotDataSource {
     }
 
     @Override
-    public void pdaLogin(String terminal, ModuleBean moduleBean, final getCallback callback) {
-        Observable<PdaLoginRecord> observable = RetrofitHelper.getInstance(mContext).getServer().pdaLogin(terminal, moduleBean);
+    public void pdaLogin(ModuleBean moduleBean, final getCallback callback) {
+        Observable<PdaLoginRecord> observable = RetrofitHelper.getInstance(mContext).getServer().pdaLogin(moduleBean);
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PdaLoginRecord>() {
                     @Override
@@ -57,8 +60,30 @@ public class RemotDataSourceImpl implements RemotDataSource {
     }
 
     @Override
-    public void pickUpDetail(String token, ModuleBean moduleBean, final getCallback callback) {
-        Observable<PickUpDetailRecord> observable = RetrofitHelper.getInstance(mContext).getServer().pickUpDetail(token, moduleBean);
+    public void pdaList(String token, final getCallback callback) {
+        Observable<PdaShopList> observable = RetrofitHelper.getInstance(mContext).getServer().pdaList(token);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PdaShopList>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PdaShopList s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void pickUpDetail(ModuleBean moduleBean, final getCallback callback) {
+        Observable<PickUpDetailRecord> observable = RetrofitHelper.getInstance(mContext).getServer1().pickUpDetail(moduleBean);
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PickUpDetailRecord>() {
                     @Override
@@ -73,6 +98,116 @@ public class RemotDataSourceImpl implements RemotDataSource {
 
                     @Override
                     public void onNext(PickUpDetailRecord s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void toVerify(ModuleBean moduleBean, final getCallback callback) {
+        Observable<VerifyBean> observable = RetrofitHelper.getInstance(mContext).getServer1().toVerify(moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VerifyBean>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(VerifyBean s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void defect(ModuleBean moduleBean, final getCallback callback) {
+        Observable<VerifyBean> observable = RetrofitHelper.getInstance(mContext).getServer1().defect(moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VerifyBean>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(VerifyBean s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void noCode(ModuleBean moduleBean, final getCallback callback) {
+        Observable<VerifyBean> observable = RetrofitHelper.getInstance(mContext).getServer1().noCode(moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VerifyBean>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(VerifyBean s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void refuse(ModuleBean moduleBean, final getCallback callback) {
+        Observable<VerifyBean> observable = RetrofitHelper.getInstance(mContext).getServer1().refuse(moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VerifyBean>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(VerifyBean s) { // 请求成功
+                        callback.onSuccess(s);
+                    }
+                });
+    }
+
+    @Override
+    public void barter(ModuleBean moduleBean, final getCallback callback) {
+        Observable<VerifyBean> observable = RetrofitHelper.getInstance(mContext).getServer1().barter(moduleBean);
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VerifyBean>() {
+                    @Override
+                    public void onCompleted() { // 完成请求后
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) { // 异常处理
+                        callback.onFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(VerifyBean s) { // 请求成功
                         callback.onSuccess(s);
                     }
                 });
@@ -101,8 +236,8 @@ public class RemotDataSourceImpl implements RemotDataSource {
     }
 
     @Override
-    public void pickUpListForGoods(String token, ModuleBean moduleBean, final getCallback callback) {
-        Observable<PickUpListForGoods> observable = RetrofitHelper.getInstance(mContext).getServer().pickUpListForGoods(token, moduleBean);
+    public void pickUpListForGoods(ModuleBean moduleBean, final getCallback callback) {
+        Observable<PickUpListForGoods> observable = RetrofitHelper.getInstance(mContext).getServer1().pickUpListForGoods(moduleBean);
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PickUpListForGoods>() {
                     @Override
@@ -123,8 +258,8 @@ public class RemotDataSourceImpl implements RemotDataSource {
     }
 
     @Override
-    public void alreadyPickUpGoods(String token, ModuleBean moduleBean, final getCallback callback) {
-        Observable<PickUpRecord> observable = RetrofitHelper.getInstance(mContext).getServer().alreadyPickUpGoods(token, moduleBean);
+    public void alreadyPickUpGoods(String token, String date_type, String date, String type, int page, int store_id, final getCallback callback) {
+        Observable<PickUpRecord> observable = RetrofitHelper.getInstance(mContext).getServer().alreadyPickUpGoods(token, date_type, date, type, page, store_id);
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PickUpRecord>() {
                     @Override

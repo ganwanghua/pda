@@ -1,23 +1,24 @@
 package com.tuzixiansheng.pda.aty.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.pedaily.yc.ycdialoglib.dialog.loading.ViewLoading;
+import com.pedaily.yc.ycdialoglib.toast.ToastUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.tuzixiansheng.pda.R;
 import com.tuzixiansheng.pda.adapter.CollectTodayAdapter;
-import com.tuzixiansheng.pda.aty.PickedDetailActivity;
-import com.tuzixiansheng.pda.aty.PickingUpDetailActivity;
-import com.tuzixiansheng.pda.bean.ModuleBean;
-import com.tuzixiansheng.pda.bean.NumBean;
 import com.tuzixiansheng.pda.bean.PickUpRecord;
 import com.tuzixiansheng.pda.nets.DataRepository;
 import com.tuzixiansheng.pda.nets.Injection;
@@ -28,15 +29,21 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PickedFragment extends Fragment implements CollectTodayAdapter.MyItemClickListener {
-    private String pickType, phone;
+public class PickedFragment extends Fragment implements CollectTodayAdapter.MyItemClickListener, OnRefreshLoadMoreListener {
+    private String pickType;
+    private String time = "";
     private RecyclerView recycler_view;
+    private CardView card;
     private CollectTodayAdapter collectTodayAdapter;
     private DataRepository dataRepository;
-    private int num;
-    private List<PickUpRecord.DataBean> pickUp;
+    private int page = 1;
+    private TextView tv_empty;
+    private List<PickUpRecord.DataBeanX.DataBean> pickUp = new ArrayList<>();
+    private SmartRefreshLayout smartRefreshLayout;
+    private boolean isLastPage = true;
 
     public PickedFragment(String pickType) {
         this.pickType = pickType;
@@ -58,7 +65,8 @@ public class PickedFragment extends Fragment implements CollectTodayAdapter.MyIt
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 100, sticky = false) //在ui线程执行，优先级为100
     public void onEvent(String s) {
         if (pickType.equals(SpUtil.getString(getContext(), "type", ""))) {
-            pickUpList(SpUtil.getString(getContext(), "type", ""), s);
+            pickUp.clear();
+            pickUpList(SpUtil.getString(getContext(), "type", ""), page, s);
         }
     }
 
@@ -72,39 +80,54 @@ public class PickedFragment extends Fragment implements CollectTodayAdapter.MyIt
         EventBus.getDefault().register(this);
         dataRepository = Injection.dataRepository(getActivity());
         recycler_view = v.findViewById(R.id.recycler_view);
+        card = v.findViewById(R.id.card);
+        tv_empty = v.findViewById(R.id.tv_empty);
+
+        smartRefreshLayout = v.findViewById(R.id.refresh);
+        smartRefreshLayout.setOnRefreshLoadMoreListener(this);
 
         collectTodayAdapter = new CollectTodayAdapter(getActivity());
         recycler_view.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recycler_view.setAdapter(collectTodayAdapter);
         collectTodayAdapter.setItemClickListener(this);
 
-        pickUpList(pickType, phone);
+        pickUpList(pickType, page, time);
     }
 
-    private void pickUpList(String pickType, String phone) {
+    private void pickUpList(String pickType, int page, String time) {
         ViewLoading.show(getActivity());
-        String token = SpUtil.getString(getActivity(), "token", "");
-        String shopId = SpUtil.getString(getActivity(), "shopId", "");
-        ModuleBean moduleBean = new ModuleBean();
-        moduleBean.phone = phone;
-        moduleBean.shopId = shopId;
-        moduleBean.dayType = pickType;
-        moduleBean.beginTime = "";
-        moduleBean.endTime = "";
-        dataRepository.alreadyPickUpGoods(token, moduleBean, new RemotDataSource.getCallback() {
+        dataRepository.alreadyPickUpGoods(SpUtil.getString(getContext(), "token", ""), pickType, time, "finish", page, SpUtil.getInt(getContext(), "shopId", -1), new RemotDataSource.getCallback() {
             @Override
             public void onFailure(String info) {
                 ViewLoading.dismiss(getActivity());
+                smartRefreshLayout.finishLoadMore();
+                smartRefreshLayout.finishRefresh();
             }
 
             @Override
             public void onSuccess(Object data) {
                 ViewLoading.dismiss(getActivity());
+                smartRefreshLayout.finishLoadMore();
+                smartRefreshLayout.finishRefresh();
                 PickUpRecord pickUpRecord = (PickUpRecord) data;
-                if (pickUpRecord.getCode() == 200) {
-                    if (pickUpRecord.getData() != null && pickUpRecord.getData().size() != 0) {
-                        pickUp = pickUpRecord.getData();
-                        collectTodayAdapter.setData(pickUpRecord.getData());
+                if (pickUpRecord.getCode() == 1) {
+                    if (pickUpRecord.getData().getData() != null && pickUpRecord.getData().getData().size() != 0) {
+                        card.setVisibility(View.VISIBLE);
+                        tv_empty.setVisibility(View.GONE);
+                        if (page <= pickUpRecord.getData().getLast_page()) {
+                            isLastPage = false;
+                            pickUp.addAll(pickUpRecord.getData().getData());
+                            collectTodayAdapter.setData(pickUp);
+                        } else {
+                            ToastUtils.showToast("已经到底啦");
+                        }
+                    } else {
+                        if (isLastPage) {
+                            card.setVisibility(View.GONE);
+                            tv_empty.setVisibility(View.VISIBLE);
+                        } else {
+                            ToastUtils.showToast("已经到底啦");
+                        }
                     }
                 }
             }
@@ -113,8 +136,21 @@ public class PickedFragment extends Fragment implements CollectTodayAdapter.MyIt
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(getContext(), PickedDetailActivity.class);
-        intent.putExtra("phone", pickUp.get(position).getPhone());
-        startActivity(intent);
+//        Intent intent = new Intent(getContext(), PickedDetailActivity.class);
+//        intent.putExtra("phone", pickUp.get(position).getPhone());
+//        startActivity(intent);
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        page++;
+        pickUpList(pickType, page, time);
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        page = 1;
+        pickUp.clear();
+        pickUpList(pickType, page, time);
     }
 }

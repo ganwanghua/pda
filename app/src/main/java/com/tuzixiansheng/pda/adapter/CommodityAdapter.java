@@ -20,10 +20,10 @@ import java.util.List;
 public class CommodityAdapter extends RecyclerView.Adapter<CommodityAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<PickUpListForGoods.DataBean> mList = new ArrayList<>();
+    private List<PickUpListForGoods.DataBeanX.ResultBean.DataBean.ItemBean> mList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
 
-    public void setData(List<PickUpListForGoods.DataBean> data) {
+    public void setData(List<PickUpListForGoods.DataBeanX.ResultBean.DataBean.ItemBean> data) {
         mList = data;
         notifyDataSetChanged();
     }
@@ -48,10 +48,10 @@ public class CommodityAdapter extends RecyclerView.Adapter<CommodityAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.tv_item_nickname.setText(mList.get(position).getSkuCode());
-        holder.tv_item_phone.setText(mList.get(position).getSkuName());
-        holder.tv_item_num.setText(mList.get(position).getPickNum() + "件");
-        holder.tv_specifications.setText(mList.get(position).getSkuStandard());
+        holder.tv_item_nickname.setText(mList.get(position).getStatus_name());
+        holder.tv_item_phone.setText(mList.get(position).getGoods_title());
+        holder.tv_item_num.setText(mList.get(position).getGoods_num() + "件");
+        holder.tv_specifications.setText(mList.get(position).getGoods_sku_text());
         holder.ll_wait_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

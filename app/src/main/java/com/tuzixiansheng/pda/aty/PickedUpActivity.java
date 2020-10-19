@@ -103,6 +103,12 @@ public class PickedUpActivity extends BaseActivity {
     ViewPager viewPager1;
     @BindView(R.id.rl_commodity)
     RelativeLayout rlCommodity;
+    @BindView(R.id.tv_history_two)
+    TextView tvHistoryTwo;
+    @BindView(R.id.view5)
+    View view5;
+    @BindView(R.id.ll_history_two)
+    LinearLayout llHistoryTwo;
     private boolean isClick = true;
 
     @Override
@@ -124,14 +130,15 @@ public class PickedUpActivity extends BaseActivity {
         } else if (numBean.getType().equals("3")) {
             tvPicking.setText("取货中(" + numBean.getNum() + ")");
         } else if (numBean.getType().equals("4")) {
-            tvTodayOne.setText("当日待取(" + numBean.getNum() + ")");
+            tvTodayOne.setText("当日盘点(" + numBean.getNum() + ")");
         } else if (numBean.getType().equals("5")) {
-            tvHistoryOne.setText("昨日待取(" + numBean.getNum() + ")");
+            tvHistoryOne.setText("昨日盘点(" + numBean.getNum() + ")");
+        } else if (numBean.getType().equals("6")) {
+            tvHistoryTwo.setText("逾期盘点(" + numBean.getNum() + ")");
         }
     }
 
     private void initView() {
-        SpUtil.saveString(PickedUpActivity.this, "type", "1");
         for (int i = 0; i < 3; i++) {
             fragments.add(new CollectTodayFragment(i + 1 + ""));
         }
@@ -166,8 +173,14 @@ public class PickedUpActivity extends BaseActivity {
             }
         });
 
-        for (int i = 0; i < 2; i++) {
-            fragments1.add(new CommodityFragment(i + 1 + ""));
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                fragments1.add(new CommodityFragment("today"));
+            } else if (i == 1) {
+                fragments1.add(new CommodityFragment("yesterday"));
+            } else if (i == 2) {
+                fragments1.add(new CommodityFragment("day"));
+            }
         }
         FragmentAdapter adatper1 = new FragmentAdapter(getSupportFragmentManager(), fragments1);
         viewPager1.setAdapter(adatper1);
@@ -180,13 +193,20 @@ public class PickedUpActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    SpUtil.saveString(PickedUpActivity.this, "type", "1");
+                    SpUtil.saveString(PickedUpActivity.this, "type", "today");
                     view3.setVisibility(View.VISIBLE);
                     view4.setVisibility(View.GONE);
+                    view5.setVisibility(View.GONE);
                 } else if (position == 1) {
-                    SpUtil.saveString(PickedUpActivity.this, "type", "2");
+                    SpUtil.saveString(PickedUpActivity.this, "type", "yesterday");
                     view3.setVisibility(View.GONE);
                     view4.setVisibility(View.VISIBLE);
+                    view5.setVisibility(View.GONE);
+                } else if (position == 2) {
+                    SpUtil.saveString(PickedUpActivity.this, "type", "day");
+                    view3.setVisibility(View.GONE);
+                    view4.setVisibility(View.GONE);
+                    view5.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -259,6 +279,7 @@ public class PickedUpActivity extends BaseActivity {
                 break;
             case R.id.tv_query:
                 if (editSku.getText().toString().length() > 0) {
+                    SpUtil.saveString(this, "type", "today");
                     EventBus.getDefault().post(editSku.getText().toString());
                 } else {
                     ToastUtils.showToast("请输入SKU编码");
@@ -267,14 +288,23 @@ public class PickedUpActivity extends BaseActivity {
             case R.id.ll_today_one:
                 view3.setVisibility(View.VISIBLE);
                 view4.setVisibility(View.GONE);
-                SpUtil.saveString(this, "type", "1");
+                view5.setVisibility(View.GONE);
+                SpUtil.saveString(this, "type", "today");
                 viewPager1.setCurrentItem(0);
                 break;
             case R.id.ll_history_one:
                 view3.setVisibility(View.GONE);
                 view4.setVisibility(View.VISIBLE);
-                SpUtil.saveString(this, "type", "2");
+                view5.setVisibility(View.GONE);
+                SpUtil.saveString(this, "type", "yesterday");
                 viewPager1.setCurrentItem(1);
+                break;
+            case R.id.ll_history_two:
+                view3.setVisibility(View.GONE);
+                view4.setVisibility(View.GONE);
+                view5.setVisibility(View.VISIBLE);
+                SpUtil.saveString(this, "type", "day");
+                viewPager1.setCurrentItem(2);
                 break;
         }
     }
